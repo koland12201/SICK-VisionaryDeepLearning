@@ -31,8 +31,7 @@ namespace WindowsFormsApp1
         VisionaryControl control = new VisionaryControl(host);
         int index = 0;
         Bitmap bitmap_RGB;
-        bool iswrite = false;
-        byte[] qqq;
+
         public Form1()
         {
             InitializeComponent();
@@ -41,157 +40,19 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Task.Run(async () =>
-            {
-                // Buffer for reading data
-                Byte[] bytes = new Byte[1024];
-
-                try
-                {
-                    IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
-                    TcpListener server = new TcpListener(ipAddress, 12201);
-                    System.Threading.Thread.Sleep(1000);
-                    server.Start();
-                    //MessageBox.Show("Waiting for client to connect...");
-                    TcpClient client = server.AcceptTcpClient();
-                    NetworkStream nStream = client.GetStream();
-                    //network loop, send then wait for reply loop
-                    int i = -1;
-                    Bitmap tmp_RGB;
-                    while (true)
-                    {
-                        Thread.Sleep(2);
-                        i = nStream.Read(bytes, 0, bytes.Length);
-
-                        if (i > 0)
-                        {
-                            String data = null;
-                            // Translate data bytes to a ASCII string.
-                            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                            //MessageBox.Show("Received:" + data);
-                            // Process the data sent by the client.
-                            data = data.ToUpper();
-                            //nStream.Write(bytes, 0, bytes.Length);
-
-                            if (data == "REQUEST\n")
-                            {
-                                //transmit 1 frame
-                                //compile image from 640x512x3 -> 983040x1
-                                if(!iswrite)
-                                {
-                                    byte[] bStream = ImageToByte(bitmap_RGB);
-                                    nStream.Write(bStream, 0, bStream.Length);
-                                }
-                         
-                                /*
-                                //Send back a response.
-                                String cmd = "END";
-                                Byte[] endOfStream_ary = Encoding.UTF8.GetBytes(cmd);
-                                Byte[] endOfStream = new Byte[cmd.Length + 2];
-                                for (int i2 = 0; i2 < cmd.Length; i2++)
-                                {
-                                    endOfStream[i2 + 1] = endOfStream_ary[i2];
-                                }
-                                endOfStream =new Byte[1];
-                                nStream.Write(endOfStream, 0, endOfStream.Length);
-                                */
-
-                                //MessageBox.Show("Sent" + data);
-                            }
-                        }
-                        else
-                        {
-                            int wer = 0;
-                        }
-                    }
-            }
-                catch (Exception e1)
-            {
-                MessageBox.Show("SocketException: " + e1.Message);
-            }
-
-            /*
-            TcpListener server = null;
-            try
-            {
-                // Set the TcpListener on port 12201
-                Int32 port = 12201;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-
-                // TcpListener server = new TcpListener(port);
-                server = new TcpListener(localAddr, port);
-
-                // Start listening for client requests.
-                server.Start();
-
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String data = null;
-
-                // Enter the listening loop.
-                while (true)
-                {
-                    MessageBox.Show("Waiting for a connection... ");
-
-                    // Perform a blocking call to accept requests.
-                    // You could also user server.AcceptSocket() here.
-                    TcpClient client = server.AcceptTcpClient();
-                    MessageBox.Show("Connected!");
-
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        MessageBox.Show("Received:"+ data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        MessageBox.Show("Sent"+ data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
-                }
-            }
-            catch 
-            {
-                MessageBox.Show("SocketException");
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                server.Stop();
-            }
-            */
-        });
-
-
             try
             {
                 Task.Run(async () =>
                 {
                     if (!await dataStream.ConnectAsync())
                     {
-        // Data stream connection failed
-        MessageBox.Show("error");
+                         // Data stream connection failed
+                        MessageBox.Show("error");
                     }
                     if (!await control.ConnectAsync())
                     {
-        // Data control (CoLaB) connection failed
-    }
+                        // Data control (CoLaB) connection failed
+                    }
                     await control.StartAcquisitionAsync();
                 });
             }
@@ -201,34 +62,95 @@ namespace WindowsFormsApp1
                 throw;
             }
             System.Threading.Thread.Sleep(1500);
+
             Task.Run(async () =>
             {
-                while (true)
+                try
                 {
+                    IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
+                    TcpListener server = new TcpListener(ipAddress, 12201);
+                    System.Threading.Thread.Sleep(1000);
+                    server.Start();
+                    //MessageBox.Show("Waiting for client to connect...");
+                    TcpClient client = server.AcceptTcpClient();
+                    NetworkStream nStream = client.GetStream();
+                    while (true)
+                    {
 
-                    VisionaryFrame frame = await dataStream.GetNextFrameAsync();
-                    drawBox(10, 10, 100, 100);
-                   
-                    //System.Threading.Thread.Sleep(1000);
-                    VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
-                    Console.WriteLine($"Frame received through step called, frame #{depthMap.FrameNumber}, timestamp: {depthMap.TimestampMs}");
+                        VisionaryFrame frame = await dataStream.GetNextFrameAsync();
+                        drawBox(10, 10, 100, 100);
 
-                    //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
-                    PointCloudConverter converter = new PointCloudConverter();
-                    Vector3[] pointCloud = converter.Convert(depthMap);
-                    float z = pointCloud[250 * 640 + 320].Z;
-                    this.label1.Text = z.ToString();
-                    //MessageBox.Show("get fram");
+                        //System.Threading.Thread.Sleep(1000);
+                        VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
 
-                    Bitmap bitmap = depthMap.ZMap.ToBitmap(8000);
-                    this.pictureBox1.Image = bitmap;
+                        //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
+                        PointCloudConverter converter = new PointCloudConverter();
+                        Vector3[] pointCloud = converter.Convert(depthMap);
+                        float z = pointCloud[250 * 640 + 320].Z;
+                        this.label1.Text = z.ToString();
 
+                        Bitmap bitmap = depthMap.ZMap.ToBitmap(8000);
+                        this.pictureBox1.Image = bitmap;
 
-                    iswrite = true;
-                    bitmap_RGB = depthMap.RgbaMap.ToBitmap();
-                    iswrite = false;
-                    //int abc = depthMap.RgbaMap.Data.Length;
-                    this.pictureBox2.Image = bitmap_RGB;
+                        bitmap_RGB = depthMap.RgbaMap.ToBitmap();
+
+                        this.pictureBox2.Image = bitmap_RGB;
+
+                        // Buffer for reading data
+                        Byte[] bytes = new Byte[1024];
+
+                        try
+                        {
+
+                            //network loop, send then wait for reply loop
+                            int i = -1;
+                            i = nStream.Read(bytes, 0, bytes.Length);
+
+                            if (i > 0)
+                            {
+                                String data = null;
+                                // Translate data bytes to a ASCII string.
+                                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                                //MessageBox.Show("Received:" + data);
+                                // Process the data sent by the client.
+                                data = data.ToUpper();
+                                //nStream.Write(bytes, 0, bytes.Length);
+
+                                if (data == "REQUEST\n")
+                                {
+                                    //transmit 1 frame
+                                    //compile image from 640x512x3 -> 983040x1
+
+                                    byte[] bStream = ImageToByte(bitmap_RGB);
+                                    Thread.Sleep(200);
+                                    nStream.Write(bStream, 0, bStream.Length);
+                                    Thread.Sleep(200);
+
+                                    /*
+                                    //Send back a response.
+                                    String cmd = "END";
+                                    Byte[] endOfStream_ary = Encoding.UTF8.GetBytes(cmd);
+                                    Byte[] endOfStream = new Byte[cmd.Length + 2];
+                                    for (int i2 = 0; i2 < cmd.Length; i2++)
+                                    {
+                                        endOfStream[i2 + 1] = endOfStream_ary[i2];
+                                    }
+                                    endOfStream =new Byte[1];
+                                    nStream.Write(endOfStream, 0, endOfStream.Length);
+                                    */
+
+                                    //MessageBox.Show("Sent" + data);
+                                }
+                            }
+                        }
+                        catch (Exception e1)
+                        {
+                            MessageBox.Show("SocketException: " + e1.Message);
+                        }
+                    }
+                }
+                catch
+                {
 
                 }
             });
