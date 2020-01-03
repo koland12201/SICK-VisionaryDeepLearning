@@ -38,6 +38,7 @@
             this.button_Save_depth = new System.Windows.Forms.Button();
             this.pictureBox_Mixed = new System.Windows.Forms.PictureBox();
             this.button_Save_mixed = new System.Windows.Forms.Button();
+            this.button_Save_all = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -135,11 +136,22 @@
             this.button_Save_mixed.UseVisualStyleBackColor = true;
             this.button_Save_mixed.Click += new System.EventHandler(this.button_Save_mixed_Click);
             // 
+            // button_Save_all
+            // 
+            this.button_Save_all.Location = new System.Drawing.Point(12, 473);
+            this.button_Save_all.Name = "button_Save_all";
+            this.button_Save_all.Size = new System.Drawing.Size(75, 23);
+            this.button_Save_all.TabIndex = 12;
+            this.button_Save_all.Text = "Save All";
+            this.button_Save_all.UseVisualStyleBackColor = true;
+            this.button_Save_all.Click += new System.EventHandler(this.button_Save_all_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1193, 880);
+            this.Controls.Add(this.button_Save_all);
             this.Controls.Add(this.button_Save_mixed);
             this.Controls.Add(this.pictureBox_Mixed);
             this.Controls.Add(this.button_Save_depth);
@@ -173,6 +185,7 @@
         private System.Windows.Forms.Button button_Save_depth;
         private System.Windows.Forms.PictureBox pictureBox_Mixed;
         private System.Windows.Forms.Button button_Save_mixed;
+        private System.Windows.Forms.Button button_Save_all;
     }
 }
 

@@ -33,6 +33,7 @@ namespace WindowsFormsApp1
         int index = 0;
         Bitmap bitmap;
         Bitmap bitmap_RGB;
+        Bitmap bitmap_Mixed;
         byte[] bitmap_arry;
 
         public Form1()
@@ -43,6 +44,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            textBox_Index.Text = "0";
             Task.Run(async () =>
             {
                 // Buffer for reading data
@@ -80,8 +82,8 @@ namespace WindowsFormsApp1
                                 //compile image from 640x512x3 -> 983040x1
                                 try
                                 {
-                                     //byte[] bStream = ImageToByte(bitmap_RGB);
-                                     nStream.Write(bitmap_arry, 0, bitmap_arry.Length);
+                                    //byte[] bStream = ImageToByte(bitmap_RGB);
+                                    nStream.Write(bitmap_arry, 0, bitmap_arry.Length);
                                 }
                                 catch
                                 {
@@ -104,16 +106,16 @@ namespace WindowsFormsApp1
                             }
                             else
                             {
-                                
+
                             }
                         }
                     }
-            }
+                }
                 catch (Exception e1)
-            {
-                MessageBox.Show("SocketException: " + e1.Message);
-            }
-        });
+                {
+                    MessageBox.Show("SocketException: " + e1.Message);
+                }
+            });
 
 
             try
@@ -122,13 +124,13 @@ namespace WindowsFormsApp1
                 {
                     if (!await dataStream.ConnectAsync())
                     {
-        // Data stream connection failed
-        MessageBox.Show("error");
+                        // Data stream connection failed
+                        MessageBox.Show("error");
                     }
                     if (!await control.ConnectAsync())
                     {
-        // Data control (CoLaB) connection failed
-    }
+                        // Data control (CoLaB) connection failed
+                    }
                     await control.StartAcquisitionAsync();
                 });
             }
@@ -145,7 +147,7 @@ namespace WindowsFormsApp1
 
                     VisionaryFrame frame = await dataStream.GetNextFrameAsync();
                     drawBox(10, 10, 100, 100);
-                   
+
                     //System.Threading.Thread.Sleep(1000);
                     VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
 
@@ -153,7 +155,7 @@ namespace WindowsFormsApp1
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
                     float z = pointCloud[250 * 640 + 320].Z;
-                  // this.label1.Text = z.ToString();
+                    // this.label1.Text = z.ToString();
 
                     bitmap = depthMap.ZMap.ToBitmap(20000);
                     this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
@@ -161,18 +163,23 @@ namespace WindowsFormsApp1
 
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
-                    
+
 
                     this.pictureBox2.Image = bitmap_RGB;
                     try
                     {
-                        Bitmap temp = mixedMap(bitmap_arry, bitmap);
-                        this.pictureBox_Mixed.Image = temp;
+                        bitmap_Mixed = mixedMap(bitmap_arry, bitmap);
+                        this.pictureBox_Mixed.Image = bitmap_Mixed;
                     }
                     catch { }
-                    
+
                 }
             });
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            drawBox(10, 10, 100, 100);
         }
 
         private void button_Save_Click(object sender, EventArgs e)
@@ -183,20 +190,35 @@ namespace WindowsFormsApp1
             textBox_Index.Text = index.ToString();
         }
 
-        void drawBox(int x, int y, int w, int h)
+        private void button_Save_depth_Click(object sender, EventArgs e)
         {
-            Graphics gF = pictureBox2.CreateGraphics();
-            gF.DrawRectangle(Pens.Red, x, y, w, h);
-
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep" + index.ToString() + ".png");
+            index++;
+            textBox_Index.Text = index.ToString();
         }
-        private void button2_Click(object sender, EventArgs e)
+
+        private void button_Save_mixed_Click(object sender, EventArgs e)
         {
-            drawBox(10, 10, 100, 100);
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
+            index++;
+            textBox_Index.Text = index.ToString();
+        }
+
+        private void button_Save_all_Click(object sender, EventArgs e)
+        {
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rbg" + index.ToString() + ".png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
+            index++;
+            textBox_Index.Text = index.ToString();
         }
 
         private byte[] ImageToByte(Bitmap img)
         {
-            byte[] Stream=new byte[img.Width* img.Height*3];
+            byte[] Stream = new byte[img.Width * img.Height * 3];
             int i = 0;
             int x = 0;
             int y = 0;
@@ -225,9 +247,9 @@ namespace WindowsFormsApp1
                 for (int x = 0; x < Dmap.Width; x++)
                 {
                     temp_arry[i + 2] = RGB_arry[i];
-                    temp_arry[i+1] = RGB_arry[i + 1];
+                    temp_arry[i + 1] = RGB_arry[i + 1];
                     temp_arry[i] = RGB_arry[i + 2];
-                    temp_arry[i + 3] =  Dmap.GetPixel(x, y).R; //Dmap A
+                    temp_arry[i + 3] = Dmap.GetPixel(x, y).R; //Dmap A
                     i = i + 4;
                 }
             }
@@ -235,6 +257,7 @@ namespace WindowsFormsApp1
 
             return resultMap;
         }
+
         public Bitmap CopyDataToBitmap(byte[] data)
         {
             //Here create the Bitmap to the know height, width and format
@@ -254,20 +277,12 @@ namespace WindowsFormsApp1
             //Return the bitmap 
             return bmp;
         }
-        private void button_Save_depth_Click(object sender, EventArgs e)
-        {
-            index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep" + index.ToString() + ".png");
-            index++;
-            textBox_Index.Text = index.ToString();
-        }
 
-        private void button_Save_mixed_Click(object sender, EventArgs e)
+        void drawBox(int x, int y, int w, int h)
         {
-            index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
-            index++;
-            textBox_Index.Text = index.ToString();
+            Graphics gF = pictureBox2.CreateGraphics();
+            gF.DrawRectangle(Pens.Red, x, y, w, h);
+
         }
     }
 }
