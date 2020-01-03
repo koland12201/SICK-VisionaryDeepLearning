@@ -30,9 +30,10 @@ namespace WindowsFormsApp1
         VisionaryDataStream dataStream = new VisionaryDataStream(host, port);
         VisionaryControl control = new VisionaryControl(host);
         int index = 0;
+        Bitmap bitmap;
         Bitmap bitmap_RGB;
-        bool iswrite = false;
-        byte[] qqq;
+        byte[] bitmap_arry;
+
         public Form1()
         {
             InitializeComponent();
@@ -77,12 +78,15 @@ namespace WindowsFormsApp1
                             {
                                 //transmit 1 frame
                                 //compile image from 640x512x3 -> 983040x1
-                                if(!iswrite)
+                                try
                                 {
-                                    byte[] bStream = ImageToByte(bitmap_RGB);
-                                    nStream.Write(bStream, 0, bStream.Length);
+                                     //byte[] bStream = ImageToByte(bitmap_RGB);
+                                     nStream.Write(bitmap_arry, 0, bitmap_arry.Length);
                                 }
-                         
+                                catch
+                                {
+
+                                }
                                 /*
                                 //Send back a response.
                                 String cmd = "END";
@@ -98,10 +102,10 @@ namespace WindowsFormsApp1
 
                                 //MessageBox.Show("Sent" + data);
                             }
-                        }
-                        else
-                        {
-                            int wer = 0;
+                            else
+                            {
+                                
+                            }
                         }
                     }
             }
@@ -109,73 +113,6 @@ namespace WindowsFormsApp1
             {
                 MessageBox.Show("SocketException: " + e1.Message);
             }
-
-            /*
-            TcpListener server = null;
-            try
-            {
-                // Set the TcpListener on port 12201
-                Int32 port = 12201;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-
-                // TcpListener server = new TcpListener(port);
-                server = new TcpListener(localAddr, port);
-
-                // Start listening for client requests.
-                server.Start();
-
-                // Buffer for reading data
-                Byte[] bytes = new Byte[256];
-                String data = null;
-
-                // Enter the listening loop.
-                while (true)
-                {
-                    MessageBox.Show("Waiting for a connection... ");
-
-                    // Perform a blocking call to accept requests.
-                    // You could also user server.AcceptSocket() here.
-                    TcpClient client = server.AcceptTcpClient();
-                    MessageBox.Show("Connected!");
-
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        MessageBox.Show("Received:"+ data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        MessageBox.Show("Sent"+ data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
-                }
-            }
-            catch 
-            {
-                MessageBox.Show("SocketException");
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                server.Stop();
-            }
-            */
         });
 
 
@@ -211,23 +148,19 @@ namespace WindowsFormsApp1
                    
                     //System.Threading.Thread.Sleep(1000);
                     VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
-                    Console.WriteLine($"Frame received through step called, frame #{depthMap.FrameNumber}, timestamp: {depthMap.TimestampMs}");
 
                     //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
                     float z = pointCloud[250 * 640 + 320].Z;
                     this.label1.Text = z.ToString();
-                    //MessageBox.Show("get fram");
 
-                    Bitmap bitmap = depthMap.ZMap.ToBitmap(8000);
+                    bitmap = depthMap.ZMap.ToBitmap(8000);
                     this.pictureBox1.Image = bitmap;
 
-
-                    iswrite = true;
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
-                    iswrite = false;
-                    //int abc = depthMap.RgbaMap.Data.Length;
+                    bitmap_arry = depthMap.RgbaMap.Data.ToArray();
+                     
                     this.pictureBox2.Image = bitmap_RGB;
 
                 }
@@ -274,5 +207,12 @@ namespace WindowsFormsApp1
             return Stream;
         }
 
+        private void button_Save_depth_Click(object sender, EventArgs e)
+        {
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/" + index.ToString() + "dep.png");
+            index++;
+            textBox_Index.Text = index.ToString();
+        }
     }
 }

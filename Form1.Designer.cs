@@ -31,10 +31,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.button_Save = new System.Windows.Forms.Button();
+            this.button_Save_RGB = new System.Windows.Forms.Button();
             this.textBox_Index = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.button_Save_depth = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -66,19 +67,19 @@
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
             // 
-            // button_Save
+            // button_Save_RGB
             // 
-            this.button_Save.Location = new System.Drawing.Point(12, 415);
-            this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(75, 23);
-            this.button_Save.TabIndex = 3;
-            this.button_Save.Text = "Save";
-            this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button_Save_Click);
+            this.button_Save_RGB.Location = new System.Drawing.Point(12, 386);
+            this.button_Save_RGB.Name = "button_Save_RGB";
+            this.button_Save_RGB.Size = new System.Drawing.Size(75, 23);
+            this.button_Save_RGB.TabIndex = 3;
+            this.button_Save_RGB.Text = "Save RGB";
+            this.button_Save_RGB.UseVisualStyleBackColor = true;
+            this.button_Save_RGB.Click += new System.EventHandler(this.button_Save_Click);
             // 
             // textBox_Index
             // 
-            this.textBox_Index.Location = new System.Drawing.Point(12, 388);
+            this.textBox_Index.Location = new System.Drawing.Point(12, 359);
             this.textBox_Index.Name = "textBox_Index";
             this.textBox_Index.Size = new System.Drawing.Size(100, 22);
             this.textBox_Index.TabIndex = 4;
@@ -86,7 +87,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 373);
+            this.label2.Location = new System.Drawing.Point(12, 344);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 12);
             this.label2.TabIndex = 5;
@@ -102,15 +103,26 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button_Save_depth
+            // 
+            this.button_Save_depth.Location = new System.Drawing.Point(12, 415);
+            this.button_Save_depth.Name = "button_Save_depth";
+            this.button_Save_depth.Size = new System.Drawing.Size(75, 23);
+            this.button_Save_depth.TabIndex = 9;
+            this.button_Save_depth.Text = "Save Dmap";
+            this.button_Save_depth.UseVisualStyleBackColor = true;
+            this.button_Save_depth.Click += new System.EventHandler(this.button_Save_depth_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1193, 464);
+            this.Controls.Add(this.button_Save_depth);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox_Index);
-            this.Controls.Add(this.button_Save);
+            this.Controls.Add(this.button_Save_RGB);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
@@ -129,10 +141,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Button button_Save;
+        private System.Windows.Forms.Button button_Save_RGB;
         private System.Windows.Forms.TextBox textBox_Index;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_Save_depth;
     }
 }
 
