@@ -18,7 +18,8 @@ using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
-
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 
 namespace WindowsFormsApp1
@@ -58,7 +59,6 @@ namespace WindowsFormsApp1
                     NetworkStream nStream = client.GetStream();
                     //network loop, send then wait for reply loop
                     int i = -1;
-                    Bitmap tmp_RGB;
                     while (true)
                     {
                         Thread.Sleep(2);
@@ -153,16 +153,24 @@ namespace WindowsFormsApp1
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
                     float z = pointCloud[250 * 640 + 320].Z;
-                    this.label1.Text = z.ToString();
+                  // this.label1.Text = z.ToString();
 
-                    bitmap = depthMap.ZMap.ToBitmap(8000);
+                    bitmap = depthMap.ZMap.ToBitmap(20000);
+                    this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
                     this.pictureBox1.Image = bitmap;
 
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
-                     
-                    this.pictureBox2.Image = bitmap_RGB;
+                    
 
+                    this.pictureBox2.Image = bitmap_RGB;
+                    try
+                    {
+                        Bitmap temp = mixedMap(bitmap_arry, bitmap);
+                        this.pictureBox_Mixed.Image = temp;
+                    }
+                    catch { }
+                    
                 }
             });
         }
@@ -170,7 +178,7 @@ namespace WindowsFormsApp1
         private void button_Save_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/" + index.ToString() + ".png");
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rbg" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -207,10 +215,57 @@ namespace WindowsFormsApp1
             return Stream;
         }
 
+        private Bitmap mixedMap(byte[] RGB_arry, Bitmap Dmap)
+        {
+            Byte[] temp_arry = new byte[640 * 512 * 4];//RGB_arry;
+
+            int i = 0;//4 in array
+            for (int y = 0; y < Dmap.Height; y++)
+            {
+                for (int x = 0; x < Dmap.Width; x++)
+                {
+                    temp_arry[i + 2] = RGB_arry[i];
+                    temp_arry[i+1] = RGB_arry[i + 1];
+                    temp_arry[i] = RGB_arry[i + 2];
+                    temp_arry[i + 3] =  Dmap.GetPixel(x, y).R; //Dmap A
+                    i = i + 4;
+                }
+            }
+            Bitmap resultMap = CopyDataToBitmap(temp_arry);
+
+            return resultMap;
+        }
+        public Bitmap CopyDataToBitmap(byte[] data)
+        {
+            //Here create the Bitmap to the know height, width and format
+            Bitmap bmp = new Bitmap(640, 512, PixelFormat.Format32bppArgb);
+
+            //Create a BitmapData and Lock all pixels to be written 
+            BitmapData bmpData = bmp.LockBits(
+                                 new Rectangle(0, 0, bmp.Width, bmp.Height),
+                                 ImageLockMode.WriteOnly, bmp.PixelFormat);
+
+            //Copy the data from the byte array into BitmapData.Scan0
+            Marshal.Copy(data, 0, bmpData.Scan0, data.Length);
+
+            //Unlock the pixels
+            bmp.UnlockBits(bmpData);
+
+            //Return the bitmap 
+            return bmp;
+        }
         private void button_Save_depth_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/" + index.ToString() + "dep.png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep" + index.ToString() + ".png");
+            index++;
+            textBox_Index.Text = index.ToString();
+        }
+
+        private void button_Save_mixed_Click(object sender, EventArgs e)
+        {
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
