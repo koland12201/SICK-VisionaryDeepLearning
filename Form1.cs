@@ -187,7 +187,7 @@ namespace WindowsFormsApp1
         private void button_Save_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb" + index.ToString() + ".png");
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -195,7 +195,7 @@ namespace WindowsFormsApp1
         private void button_Save_depth_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep" + index.ToString() + ".png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -203,7 +203,7 @@ namespace WindowsFormsApp1
         private void button_Save_mixed_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -211,9 +211,9 @@ namespace WindowsFormsApp1
         private void button_Save_all_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb" + index.ToString() + ".png");
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep" + index.ToString() + ".png");
-            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed" + index.ToString() + ".png");
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -250,11 +250,8 @@ namespace WindowsFormsApp1
                     temp_arry[i + 2] = RGB_arry[i];
                     temp_arry[i + 1] = RGB_arry[i + 1];
                     temp_arry[i] = RGB_arry[i + 2];
-
-                    pixelValue = (byte)((Zmap[i2] / (double)scalingMaxValue) * byte.MaxValue);
-                    temp_arry[i + 3] = pixelValue; //replace A to ZMap
+                    temp_arry[i + 3] = (byte)((Zmap[i2] / (double)scalingMaxValue) * byte.MaxValue); //replace A to ZMap
                     i = i + 4;
-
             }
             Bitmap resultMap = CopyDataToBitmap(temp_arry);
 
