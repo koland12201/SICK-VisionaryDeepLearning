@@ -45,6 +45,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             textBox_Index.Text = "0";
             Task.Run(async () =>
             {
@@ -88,26 +89,17 @@ namespace WindowsFormsApp1
                                 }
                                 catch
                                 {
-
                                 }
-                                /*
-                                //Send back a response.
-                                String cmd = "END";
-                                Byte[] endOfStream_ary = Encoding.UTF8.GetBytes(cmd);
-                                Byte[] endOfStream = new Byte[cmd.Length + 2];
-                                for (int i2 = 0; i2 < cmd.Length; i2++)
-                                {
-                                    endOfStream[i2 + 1] = endOfStream_ary[i2];
-                                }
-                                endOfStream =new Byte[1];
-                                nStream.Write(endOfStream, 0, endOfStream.Length);
-                                */
-
-                                //MessageBox.Show("Sent" + data);
                             }
-                            else
+                            else if(data != "EMPTY\n")
                             {
-
+                                try
+                                {
+                                    parsedata(data);
+                                }
+                                catch
+                                {
+                                }
                             }
                         }
                     }
@@ -147,7 +139,6 @@ namespace WindowsFormsApp1
                 {
 
                     VisionaryFrame frame = await dataStream.GetNextFrameAsync();
-                    drawBox(10, 10, 100, 100);
 
                     //System.Threading.Thread.Sleep(1000);
                     VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
@@ -158,7 +149,7 @@ namespace WindowsFormsApp1
                     float z = pointCloud[250 * 640 + 320].Z;
                     // this.label1.Text = z.ToString();
 
-                    bitmap = depthMap.ZMap.ToBitmap(20000);
+                    bitmap = depthMap.ZMap.ToBitmap(25000);
                     this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
                     this.pictureBox1.Image = bitmap;
 
@@ -170,7 +161,7 @@ namespace WindowsFormsApp1
                     this.pictureBox2.Image = bitmap_RGB;
                     try
                     {
-                        bitmap_Mixed = mixedMap(bitmap_arry, ZMap_arry, 20000);
+                        bitmap_Mixed = mixedMap(bitmap_arry, ZMap_arry, 25000);
                         this.pictureBox_Mixed.Image = bitmap_Mixed;
                     }
                     catch { }
@@ -277,12 +268,21 @@ namespace WindowsFormsApp1
             //Return the bitmap 
             return bmp;
         }
-
+        void parsedata(String data)
+        {
+            
+            String[] _commandArry = data.Split(' ');
+            for (int i=0; i<=_commandArry.Length; i=i+4)
+            {
+                drawBox(Convert.ToInt32(_commandArry[i]), Convert.ToInt32(_commandArry[i + 1]), Convert.ToInt32(_commandArry[i + 2]), Convert.ToInt32(_commandArry[i + 3]));
+            }
+        }
         void drawBox(int x, int y, int w, int h)
         {
             Graphics gF = pictureBox2.CreateGraphics();
-            gF.DrawRectangle(Pens.Red, x, y, w, h);
-
+            Pen Pen = new Pen(Color.FromArgb(255, 0, 255, 0), 5);
+            gF.DrawRectangle(Pen, x, y, w, h);
+            
         }
 
     }

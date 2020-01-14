@@ -55,6 +55,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
             this.pictureBox1.Location = new System.Drawing.Point(157, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(496, 426);
@@ -64,9 +65,10 @@
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.Control;
             this.pictureBox2.Location = new System.Drawing.Point(678, 12);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(496, 426);
+            this.pictureBox2.Size = new System.Drawing.Size(640, 512);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
@@ -119,6 +121,7 @@
             // 
             // pictureBox_Mixed
             // 
+            this.pictureBox_Mixed.BackColor = System.Drawing.SystemColors.Control;
             this.pictureBox_Mixed.Location = new System.Drawing.Point(157, 444);
             this.pictureBox_Mixed.Name = "pictureBox_Mixed";
             this.pictureBox_Mixed.Size = new System.Drawing.Size(496, 426);
@@ -150,7 +153,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1193, 880);
+            this.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.ClientSize = new System.Drawing.Size(1355, 880);
             this.Controls.Add(this.button_Save_all);
             this.Controls.Add(this.button_Save_mixed);
             this.Controls.Add(this.pictureBox_Mixed);

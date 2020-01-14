@@ -105,7 +105,6 @@ C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\o
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.Form1.resources
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.Properties.Resources.resources
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
-C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.CopyComplete
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.exe
 C:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.pdb
