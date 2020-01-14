@@ -9,4 +9,9 @@ upon receiving "REQUEST", the current frame will be send over as 1310720x1 *512 
 
 to re-arrange array back to 512x640x4, reshape 1310720x1 in RGBA order (in this case, A is replaced by depth map or can be ignored)
 
-Not tested on other backends, but it should work
+# Display bounding boxes
+It expects a reply from backend (x,y,w,h) for each boxes in ASCII
+
+Example: "100 200 50 50 300 250 80 60" 
+
+Not tested on other backends, but it should work as long as communication format agrees.
