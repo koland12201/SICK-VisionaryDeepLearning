@@ -1,5 +1,5 @@
 # SICK-VisionaryDeepLearning
-Requires TCP/IP connection with MATLAB. Visionary model S
+Requires TCP/IP connection with MATLAB or other platform of your choice. Tested on Visionary model S
 
 Interface to MATLAB port: 12201
 default Visionary IP: 192.168.1.10
