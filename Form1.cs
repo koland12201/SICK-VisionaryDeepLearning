@@ -177,15 +177,16 @@ namespace WindowsFormsApp1
 
         private void button_Save_Click(object sender, EventArgs e)
         {
-            index = Convert.ToInt32(textBox_Index.Text);       
-            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
+            index = Convert.ToInt32(textBox_Index.Text);
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
+
         private void button_Save_depth_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -193,7 +194,7 @@ namespace WindowsFormsApp1
         private void button_Save_mixed_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -201,9 +202,9 @@ namespace WindowsFormsApp1
         private void button_Save_all_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
-            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
-            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
+            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -234,6 +235,7 @@ namespace WindowsFormsApp1
             Byte[] temp_arry = new byte[640 * 512 * 4];//RGB_arry;
 
             int i = 0;//4 in array
+            byte pixelValue;
             for (int i2 = 0; i2 < Zmap.Length; i2++)
             {   
                     temp_arry[i + 2] = RGB_arry[i];
@@ -282,24 +284,6 @@ namespace WindowsFormsApp1
             gF.DrawRectangle(Pen, x, y, w, h);
             
         }
-        public static string GetFullFileNameFromApplication(string iFilename)
-        {
-            string iNewFilename = "";
 
-            // Get full name considering relative path
-            FileInfo f = new FileInfo(iFilename);
-
-            if (iFilename.StartsWith(".\\"))  // File in child folder
-                iNewFilename = Application.StartupPath
-                             + iFilename.Substring(1); // leave period out of string
-            else if (!iFilename.Contains("\\")) // Consider file in StartupPath
-                iNewFilename = Application.StartupPath
-                             + "\\"
-                             + iFilename;
-            else
-                iNewFilename = f.FullName; // keep full path
-
-            return iNewFilename;
-        }
     }
 }
