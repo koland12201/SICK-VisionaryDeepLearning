@@ -26,10 +26,7 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        static String host = "192.168.1.10";
-        static int port = 2114;
-        VisionaryDataStream dataStream = new VisionaryDataStream(host, port);
-        VisionaryControl control = new VisionaryControl(host);
+
         int index = 0;
         Bitmap bitmap;
         Bitmap bitmap_RGB;
@@ -46,6 +43,14 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
 
+
+        }
+        private void button_Connect_Click(object sender, EventArgs e)
+        {
+            String host = textBox_IP.Text;
+            int port = 2114;
+            VisionaryDataStream dataStream = new VisionaryDataStream(host, port);
+            VisionaryControl control = new VisionaryControl(host);
             textBox_Index.Text = "0";
             Task.Run(async () =>
             {
@@ -91,7 +96,7 @@ namespace WindowsFormsApp1
                                 {
                                 }
                             }
-                            else if(data != "EMPTY\n")
+                            else if (data != "EMPTY\n")
                             {
                                 try
                                 {
@@ -165,14 +170,17 @@ namespace WindowsFormsApp1
                         this.pictureBox_Mixed.Image = bitmap_Mixed;
                     }
                     catch { }
-
                 }
             });
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            drawBox(10, 10, 100, 100);
+            for (int i = 0; i <= 360; i++)
+            {
+                drawBox(200, 200, 100, 100, 45);
+                drawBox(300, 300, 100, 100, i);
+            }
         }
 
         private void button_Save_Click(object sender, EventArgs e)
@@ -233,9 +241,7 @@ namespace WindowsFormsApp1
         private Bitmap mixedMap(byte[] RGB_arry, ushort[] Zmap,UInt16 scalingMaxValue)
         {
             Byte[] temp_arry = new byte[640 * 512 * 4];//RGB_arry;
-
             int i = 0;//4 in array
-            byte pixelValue;
             for (int i2 = 0; i2 < Zmap.Length; i2++)
             {   
                     temp_arry[i + 2] = RGB_arry[i];
@@ -245,7 +251,6 @@ namespace WindowsFormsApp1
                     i = i + 4;
             }
             Bitmap resultMap = CopyDataToBitmap(temp_arry);
-
             return resultMap;
         }
 
@@ -270,20 +275,21 @@ namespace WindowsFormsApp1
         }
         void parsedata(String data)
         {
-            
             String[] _commandArry = data.Split(' ');
             for (int i=0; i<=_commandArry.Length; i=i+4)
             {
-                drawBox(Convert.ToInt32(_commandArry[i]), Convert.ToInt32(_commandArry[i + 1]), Convert.ToInt32(_commandArry[i + 2]), Convert.ToInt32(_commandArry[i + 3]));
+                drawBox(Convert.ToInt32(_commandArry[i]), Convert.ToInt32(_commandArry[i + 1]), Convert.ToInt32(_commandArry[i + 2]), Convert.ToInt32(_commandArry[i + 3]),0);
             }
         }
-        void drawBox(int x, int y, int w, int h)
+        void drawBox(int x, int y, int w, int h,float deg)
         {
             Graphics gF = pictureBox2.CreateGraphics();
+            gF.RotateTransform(deg);
             Pen Pen = new Pen(Color.FromArgb(255, 0, 255, 0), 5);
             gF.DrawRectangle(Pen, x, y, w, h);
             
         }
+
 
     }
 }

@@ -39,6 +39,9 @@
             this.pictureBox_Mixed = new System.Windows.Forms.PictureBox();
             this.button_Save_mixed = new System.Windows.Forms.Button();
             this.button_Save_all = new System.Windows.Forms.Button();
+            this.textBox_IP = new System.Windows.Forms.TextBox();
+            this.button_Connect = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -149,12 +152,43 @@
             this.button_Save_all.UseVisualStyleBackColor = true;
             this.button_Save_all.Click += new System.EventHandler(this.button_Save_all_Click);
             // 
+            // textBox_IP
+            // 
+            this.textBox_IP.Location = new System.Drawing.Point(1110, 844);
+            this.textBox_IP.Name = "textBox_IP";
+            this.textBox_IP.Size = new System.Drawing.Size(114, 22);
+            this.textBox_IP.TabIndex = 13;
+            this.textBox_IP.Text = "192.168.1.10";
+            this.textBox_IP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // button_Connect
+            // 
+            this.button_Connect.Location = new System.Drawing.Point(1243, 844);
+            this.button_Connect.Name = "button_Connect";
+            this.button_Connect.Size = new System.Drawing.Size(75, 23);
+            this.button_Connect.TabIndex = 14;
+            this.button_Connect.Text = "Connect";
+            this.button_Connect.UseVisualStyleBackColor = true;
+            this.button_Connect.Click += new System.EventHandler(this.button_Connect_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1086, 849);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(18, 12);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "IP:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(1355, 880);
+            this.ClientSize = new System.Drawing.Size(1345, 880);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.button_Connect);
+            this.Controls.Add(this.textBox_IP);
             this.Controls.Add(this.button_Save_all);
             this.Controls.Add(this.button_Save_mixed);
             this.Controls.Add(this.pictureBox_Mixed);
@@ -167,7 +201,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Visionary S";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -190,6 +224,9 @@
         private System.Windows.Forms.PictureBox pictureBox_Mixed;
         private System.Windows.Forms.Button button_Save_mixed;
         private System.Windows.Forms.Button button_Save_all;
+        private System.Windows.Forms.TextBox textBox_IP;
+        private System.Windows.Forms.Button button_Connect;
+        private System.Windows.Forms.Label label3;
     }
 }
 
