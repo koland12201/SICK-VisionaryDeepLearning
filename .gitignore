@@ -3,3 +3,11 @@ bin/x64/Output/rgb/
 bin/x64/Output/json/
 bin/x64/Output/mixed/
 
+bin/Debug/OpenTK.xml
+OpenTK.dll.config
+License-LGPL.txt
+bin/Debug/Emgu.CV.UI.GL.xml
+bin/Debug/Emgu.CV.UI.xml
+bin/Debug/Emgu.CV.World.xml
+bin/Debug/OpenTK.GLControl.xml
+bin/Debug/ZedGraph.xml
