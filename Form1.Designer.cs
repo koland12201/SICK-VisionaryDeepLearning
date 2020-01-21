@@ -42,6 +42,8 @@
             this.textBox_IP = new System.Windows.Forms.TextBox();
             this.button_Connect = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.checkBox_MinAreaRect = new System.Windows.Forms.CheckBox();
+            this.listBox_BoxList = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -180,12 +182,33 @@
             this.label3.TabIndex = 15;
             this.label3.Text = "IP:";
             // 
+            // checkBox_MinAreaRect
+            // 
+            this.checkBox_MinAreaRect.AutoSize = true;
+            this.checkBox_MinAreaRect.Location = new System.Drawing.Point(678, 732);
+            this.checkBox_MinAreaRect.Name = "checkBox_MinAreaRect";
+            this.checkBox_MinAreaRect.Size = new System.Drawing.Size(303, 16);
+            this.checkBox_MinAreaRect.TabIndex = 16;
+            this.checkBox_MinAreaRect.Text = "locate boxes (Zmap, locate box via MinAreaRect algorithm)";
+            this.checkBox_MinAreaRect.UseVisualStyleBackColor = true;
+            // 
+            // listBox_BoxList
+            // 
+            this.listBox_BoxList.FormattingEnabled = true;
+            this.listBox_BoxList.ItemHeight = 12;
+            this.listBox_BoxList.Location = new System.Drawing.Point(678, 530);
+            this.listBox_BoxList.Name = "listBox_BoxList";
+            this.listBox_BoxList.Size = new System.Drawing.Size(640, 196);
+            this.listBox_BoxList.TabIndex = 17;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1345, 880);
+            this.Controls.Add(this.listBox_BoxList);
+            this.Controls.Add(this.checkBox_MinAreaRect);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button_Connect);
             this.Controls.Add(this.textBox_IP);
@@ -227,6 +250,8 @@
         private System.Windows.Forms.TextBox textBox_IP;
         private System.Windows.Forms.Button button_Connect;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBox_MinAreaRect;
+        private System.Windows.Forms.ListBox listBox_BoxList;
     }
 }
 
