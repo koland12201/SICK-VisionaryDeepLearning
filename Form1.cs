@@ -76,7 +76,7 @@ namespace WindowsFormsApp1
                         Thread.Sleep(2);
                         i = nStream.Read(bytes, 0, bytes.Length);
 
-                        if (i > 0)
+                        if (i > 0 )
                         {
                             String data = null;
                             // Translate data bytes to a ASCII string.
@@ -99,7 +99,7 @@ namespace WindowsFormsApp1
                                 {
                                 }
                             }
-                            else if (data != "EMPTY\n")
+                            else if (data != "EMPTY\n"&& checkBox_UseBackend.Checked == true)
                             {
                                 try
                                 {
@@ -156,10 +156,12 @@ namespace WindowsFormsApp1
                     Vector3[] pointCloud = converter.Convert(depthMap);
                     float z = pointCloud[250 * 640 + 320].Z;
                     // this.label1.Text = z.ToString();
-
-                    bitmap = depthMap.ZMap.ToBitmap(25000);
+                    if (textBox_DynamicRange.Text == "")
+                    {
+                        textBox_DynamicRange.Text = "1";
+                    }
+                    bitmap = depthMap.ZMap.ToBitmap(Convert.ToUInt16(textBox_DynamicRange.Text));
                     this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
-                    this.pictureBox1.Image = bitmap;
 
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
@@ -167,46 +169,53 @@ namespace WindowsFormsApp1
 
                     if (checkBox_MinAreaRect.Checked == true)
                     {
-                        Image<Bgr, byte> a = new Image<Bgr, byte>(bitmap_RGB);
-                        Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);        //边缘检测
+                       
+
+                        Image<Bgr, byte> a = new Image<Bgr, byte>(bitmap);
+                        Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //边缘检测
                         Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //用于寻找轮廓 
                         Image<Bgr, byte> d = new Image<Bgr, byte>(a.Width, a.Height);           //用于绘制轮廓
 
                         //a.ROI =new Rectangle(x, y, w+offset, h+offset);
-                        CvInvoke.Canny(a, b, 255, 30);
+
+                        int cannytherhold = 100;
+                        CvInvoke.Canny(a, b, cannytherhold / 2, cannytherhold);
+
                         VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
-                        CvInvoke.FindContours(b, con, c, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
-
-
+                        CvInvoke.FindContours(b, con, c, RetrType.List, ChainApproxMethod.ChainApproxNone);
+                        double[] temp = new double[10000];
                         Point[][] con1 = con.ToArrayOfArray();
                         PointF[][] con2 = Array.ConvertAll<Point[], PointF[]>(con1, new Converter<Point[], PointF[]>(PointToPointF));
                         for (int i = 0; i < con.Size; i++)
                         {
-                            //Rectangle rec = CvInvoke.BoundingRectangle(con[i]);    //r
+                            temp[i] = CvInvoke.ContourArea(con[i],false);
 
-                            // CircleF cir = CvInvoke.MinEnclosingCircle(con2[i]);   //b
+                            if (CvInvoke.ContourArea(con[i],false) <= 100)
+                            { continue; }
 
                             RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
 
                             PointF[] pointfs = rrec.GetVertices();
-                            for (int j = 0; j < pointfs.Length; j++)
+                           for (int j = 0; j < pointfs.Length; j++)
                                 CvInvoke.Line(a, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new MCvScalar(0, 255, 0, 255), 4);
-
-                            //CvInvoke.Rectangle(a, rec, new MCvScalar(0, 0, 255, 255), 4);
-                            // CvInvoke.Circle(a, new Point((int)cir.Center.X, (int)cir.Center.Y), (int)cir.Radius, new MCvScalar(255, 0, 0, 255), 4);
                         }
-                        // for (int i = 0; i < con.Size; i++)
-                        //CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 0, 255, 255), 2);
+                        for (int i = 0; i < con.Size; i++)
+                        {
+                            CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 255, 0, 255), 2);
+                        }
+                            
                         //CvInvoke.Inpaint();
                         this.pictureBox2.Image = a.ToBitmap();
+                        this.pictureBox1.Image = bitmap_RGB;
                     }
                     else
                     {
                         this.pictureBox2.Image = bitmap_RGB;
+                        this.pictureBox1.Image = bitmap;
                     }
                     try
                     {
-                        bitmap_Mixed = mixedMap(bitmap_arry, ZMap_arry, 25000);
+                        bitmap_Mixed = mixedMap(bitmap_arry, ZMap_arry, Convert.ToUInt16(textBox_DynamicRange.Text));
                         this.pictureBox_Mixed.Image = bitmap_Mixed;
                     }
                     catch { }
@@ -320,50 +329,11 @@ namespace WindowsFormsApp1
 
         void drawBox(int x, int y, int w, int h)
         {
-            int offset = 10;
-            //find contour
-            if (checkBox_MinAreaRect.Checked == true)
-            {
-            Image<Bgr, byte> a = new Image<Bgr, byte>(bitmap_RGB);
-            Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);        //边缘检测
-            Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //用于寻找轮廓 
-            Image<Bgr, byte> d = new Image<Bgr, byte>(a.Width, a.Height);           //用于绘制轮廓
 
-            //a.ROI =new Rectangle(x, y, w+offset, h+offset);
-            CvInvoke.Canny(a, b, 255, 30);
-            VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
-            CvInvoke.FindContours(b, con, c, RetrType.Ccomp, ChainApproxMethod.ChainApproxSimple);
-
-
-                Point[][] con1 = con.ToArrayOfArray();
-                PointF[][] con2 = Array.ConvertAll<Point[], PointF[]>(con1, new Converter<Point[], PointF[]>(PointToPointF));
-                for (int i = 0; i < con.Size; i++)
-                {
-                    //Rectangle rec = CvInvoke.BoundingRectangle(con[i]);    //r
-
-                    // CircleF cir = CvInvoke.MinEnclosingCircle(con2[i]);   //b
-
-                    RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
-
-                    PointF[] pointfs = rrec.GetVertices();
-                    for (int j = 0; j < pointfs.Length; j++)
-                        CvInvoke.Line(a, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new MCvScalar(0, 255, 0, 255), 4);
-
-                    //CvInvoke.Rectangle(a, rec, new MCvScalar(0, 0, 255, 255), 4);
-                    // CvInvoke.Circle(a, new Point((int)cir.Center.X, (int)cir.Center.Y), (int)cir.Radius, new MCvScalar(255, 0, 0, 255), 4);
-                }
-                // for (int i = 0; i < con.Size; i++)
-                //CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 0, 255, 255), 2);
-                //CvInvoke.Inpaint();
-                this.pictureBox2.Image = a.ToBitmap();
-            }
-            
             Graphics gF = pictureBox2.CreateGraphics();
             Pen Pen = new Pen(Color.FromArgb(255, 0, 255, 0), 5);
             gF.DrawRectangle(Pen, x, y, w, h);
-            
         }
-
         public static PointF[] PointToPointF(Point[] pf)
         {
             PointF[] p = new PointF[pf.Length];

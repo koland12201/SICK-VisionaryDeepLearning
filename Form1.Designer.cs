@@ -44,6 +44,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.checkBox_MinAreaRect = new System.Windows.Forms.CheckBox();
             this.listBox_BoxList = new System.Windows.Forms.ListBox();
+            this.checkBox_UseBackend = new System.Windows.Forms.CheckBox();
+            this.textBox_DynamicRange = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -187,9 +190,9 @@
             this.checkBox_MinAreaRect.AutoSize = true;
             this.checkBox_MinAreaRect.Location = new System.Drawing.Point(678, 732);
             this.checkBox_MinAreaRect.Name = "checkBox_MinAreaRect";
-            this.checkBox_MinAreaRect.Size = new System.Drawing.Size(303, 16);
+            this.checkBox_MinAreaRect.Size = new System.Drawing.Size(300, 16);
             this.checkBox_MinAreaRect.TabIndex = 16;
-            this.checkBox_MinAreaRect.Text = "locate boxes (Zmap, locate box via MinAreaRect algorithm)";
+            this.checkBox_MinAreaRect.Text = "locate boxes (RGB, locate box via MinAreaRect algorithm)";
             this.checkBox_MinAreaRect.UseVisualStyleBackColor = true;
             // 
             // listBox_BoxList
@@ -201,12 +204,42 @@
             this.listBox_BoxList.Size = new System.Drawing.Size(640, 196);
             this.listBox_BoxList.TabIndex = 17;
             // 
+            // checkBox_UseBackend
+            // 
+            this.checkBox_UseBackend.AutoSize = true;
+            this.checkBox_UseBackend.Location = new System.Drawing.Point(678, 754);
+            this.checkBox_UseBackend.Name = "checkBox_UseBackend";
+            this.checkBox_UseBackend.Size = new System.Drawing.Size(85, 16);
+            this.checkBox_UseBackend.TabIndex = 18;
+            this.checkBox_UseBackend.Text = "Use Backend";
+            this.checkBox_UseBackend.UseVisualStyleBackColor = true;
+            // 
+            // textBox_DynamicRange
+            // 
+            this.textBox_DynamicRange.Location = new System.Drawing.Point(1218, 730);
+            this.textBox_DynamicRange.Name = "textBox_DynamicRange";
+            this.textBox_DynamicRange.Size = new System.Drawing.Size(100, 22);
+            this.textBox_DynamicRange.TabIndex = 19;
+            this.textBox_DynamicRange.Text = "25000";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1102, 736);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(113, 12);
+            this.label4.TabIndex = 20;
+            this.label4.Text = "Zmap Dynamic Range:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1345, 880);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBox_DynamicRange);
+            this.Controls.Add(this.checkBox_UseBackend);
             this.Controls.Add(this.listBox_BoxList);
             this.Controls.Add(this.checkBox_MinAreaRect);
             this.Controls.Add(this.label3);
@@ -224,7 +257,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Visionary S";
+            this.Text = "Visionary S Demo- koland";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -252,6 +285,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBox_MinAreaRect;
         private System.Windows.Forms.ListBox listBox_BoxList;
+        private System.Windows.Forms.CheckBox checkBox_UseBackend;
+        private System.Windows.Forms.TextBox textBox_DynamicRange;
+        private System.Windows.Forms.Label label4;
     }
 }
 
