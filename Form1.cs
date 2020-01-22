@@ -37,7 +37,9 @@ namespace WindowsFormsApp1
         Bitmap bitmap_Mixed;
         byte[] bitmap_arry;
         ushort[] ZMap_arry;
-
+        ushort Zmap_DR;
+        ushort Zmap_Offset;
+        double RatioFilter;
         public Form1()
         {
             InitializeComponent();
@@ -46,6 +48,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
 
         }
         private void button_Connect_Click(object sender, EventArgs e)
@@ -63,7 +66,7 @@ namespace WindowsFormsApp1
                 try
                 {
                     IPAddress ipAddress = Dns.Resolve("localhost").AddressList[0];
-                    TcpListener server = new TcpListener(ipAddress, 12201);
+                    TcpListener server = new TcpListener(ipAddress, Convert.ToInt32(textBox_BackendPort.Text));
                     System.Threading.Thread.Sleep(1000);
                     server.Start();
                     //MessageBox.Show("Waiting for client to connect...");
@@ -154,57 +157,80 @@ namespace WindowsFormsApp1
                     //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
-                    float z = pointCloud[250 * 640 + 320].Z;
+                    //float z = pointCloud[250 * 640 + 320].Z;
                     // this.label1.Text = z.ToString();
-                    if (textBox_DynamicRange.Text == "")
-                    {
-                        textBox_DynamicRange.Text = "1";
-                    }
-                    bitmap = depthMap.ZMap.ToBitmap(Convert.ToUInt16(textBox_DynamicRange.Text));
-                    this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
 
+                    //read and set range of textboxs
+                    setTextboxRange();
+
+
+                    bitmap = depthMap.ZMap.ToBitmap(Zmap_DR, Zmap_Offset);
+                    this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
                     ZMap_arry = depthMap.ZMap.Data.ToArray();
 
                     if (checkBox_MinAreaRect.Checked == true)
                     {
-                       
+                        Bitmap TempMap = bitmap;
+                        if(checkBox_RGBAsZmap.Checked==true)
+                        {
+                            TempMap = bitmap_RGB;
+                        }
 
-                        Image<Bgr, byte> a = new Image<Bgr, byte>(bitmap);
-                        Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //边缘检测
-                        Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //用于寻找轮廓 
-                        Image<Bgr, byte> d = new Image<Bgr, byte>(a.Width, a.Height);           //用于绘制轮廓
+                        Image<Bgr, byte> a = new Image<Bgr, byte>(TempMap);
+                        Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //edge detection
+                        Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //find contour
+                        
+                        int Blue_threshold = 50; //0-255
+                        int Green_threshold = 50; //0-255
+                        int Red_threshold = 50; //0-255
+                        a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255));
+
 
                         //a.ROI =new Rectangle(x, y, w+offset, h+offset);
-
                         int cannytherhold = 100;
-                        CvInvoke.Canny(a, b, cannytherhold / 2, cannytherhold);
+                        CvInvoke.Canny(a, b, cannytherhold/2, cannytherhold,3,false);
 
-                        VectorOfVectorOfPoint con = new VectorOfVectorOfPoint();
+                        //enhance canny
+                        Mat struct_element = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
+                        CvInvoke.Dilate(b, b, struct_element, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(255, 255, 255));
+
+                        VectorOfVectorOfPoint con = new VectorOfVectorOfPoint(); 
                         CvInvoke.FindContours(b, con, c, RetrType.List, ChainApproxMethod.ChainApproxNone);
-                        double[] temp = new double[10000];
+
                         Point[][] con1 = con.ToArrayOfArray();
                         PointF[][] con2 = Array.ConvertAll<Point[], PointF[]>(con1, new Converter<Point[], PointF[]>(PointToPointF));
+
+
+                        listBox_BoxList.Items.Clear();
                         for (int i = 0; i < con.Size; i++)
                         {
-                            temp[i] = CvInvoke.ContourArea(con[i],false);
+                            //filter params
+                            double tempArea = CvInvoke.ContourArea(con[i], true);
+                            double tempArc = CvInvoke.ArcLength(con[i],true);
+                            double tempScale = tempArea / Math.Pow(tempArc / 4, 2);
 
-                            if (CvInvoke.ContourArea(con[i],false) <= 100)
-                            { continue; }
+                            if (tempArea >= 3000 && tempScale > RatioFilter)
+                            {
+                                RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
 
-                            RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
+                                //find box height
+                                //float tempHeight = pointCloud[250 * 640 + 320].Z;
+                                //add to listbox
+                                listBox_BoxList.Items.Add("Box :" + "(" + rrec.Center.X + "," + rrec.Center.Y + ") Length: " + rrec.Size.Width + " Width: " + rrec.Size.Height + " Height: " );
 
-                            PointF[] pointfs = rrec.GetVertices();
-                           for (int j = 0; j < pointfs.Length; j++)
-                                CvInvoke.Line(a, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new MCvScalar(0, 255, 0, 255), 4);
+                                PointF[] pointfs = rrec.GetVertices();
+                                for (int j = 0; j < pointfs.Length; j++)
+                                    CvInvoke.Line(a, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new MCvScalar(0, 255, 0, 255), 4);
+                            }
                         }
+                        /*
                         for (int i = 0; i < con.Size; i++)
                         {
                             CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 255, 0, 255), 2);
                         }
-                            
-                        //CvInvoke.Inpaint();
+                        */
                         this.pictureBox2.Image = a.ToBitmap();
                         this.pictureBox1.Image = bitmap_RGB;
                     }
@@ -231,7 +257,7 @@ namespace WindowsFormsApp1
         private void button_Save_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -239,7 +265,7 @@ namespace WindowsFormsApp1
         private void button_Save_depth_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
+            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -247,7 +273,7 @@ namespace WindowsFormsApp1
         private void button_Save_mixed_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -255,11 +281,29 @@ namespace WindowsFormsApp1
         private void button_Save_all_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/rgb/rgb" + index.ToString() + ".png");
-            bitmap.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/dep/dep" + index.ToString() + ".png");
-            bitmap_Mixed.Save("C:/Users/Koland Mak/source/repos/Visionary S/WindowsFormsApp1/Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
+            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
+        }
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            RatioFilter = (double)trackBar_RatioFilter.Value / 20;
+        }
+
+        private void checkBox_MinAreaRect_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_MinAreaRect.Checked == true)
+            {
+                trackBar_RatioFilter.Enabled = true;
+                checkBox_RGBAsZmap.Visible = true;
+            }
+            else
+            {
+                trackBar_RatioFilter.Enabled = false;
+                checkBox_RGBAsZmap.Visible = false;
+            }
         }
 
         private byte[] ImageToByte(Bitmap img)
@@ -287,12 +331,13 @@ namespace WindowsFormsApp1
         {
             Byte[] temp_arry = new byte[640 * 512 * 4];//RGB_arry;
             int i = 0;//4 in array
+
             for (int i2 = 0; i2 < Zmap.Length; i2++)
             {   
                     temp_arry[i + 2] = RGB_arry[i];
                     temp_arry[i + 1] = RGB_arry[i + 1];
                     temp_arry[i] = RGB_arry[i + 2];
-                    temp_arry[i + 3] = (byte)((Zmap[i2] / (double)scalingMaxValue) * byte.MaxValue); //replace A to ZMap
+                    temp_arry[i + 3] = (byte)(((Zmap[i2]+Zmap_Offset) / (double)scalingMaxValue) * byte.MaxValue); //replace A to ZMap
                     i = i + 4;
             }
             Bitmap resultMap = CopyDataToBitmap(temp_arry);
@@ -344,6 +389,37 @@ namespace WindowsFormsApp1
                 p[num++].Y = (int)point.Y;
             }
             return p;
+        }
+        
+        void setTextboxRange()
+        {
+            //zmap dynamic range
+            if (textBox_DynamicRange.Text == "")
+            {
+                textBox_DynamicRange.Text = "1";
+            }
+            else if (Convert.ToUInt32(textBox_DynamicRange.Text) > 50000)
+            {
+                textBox_DynamicRange.Text = "50000";
+            }
+            else
+            {
+                Zmap_DR = Convert.ToUInt16(textBox_DynamicRange.Text);
+            }
+
+            //zmap offset
+            if (textBox_ZmapOffset.Text == "")
+            {
+                textBox_ZmapOffset.Text = "0";
+            }
+            else if (Convert.ToUInt32(textBox_ZmapOffset.Text) > 30000)
+            {
+                textBox_ZmapOffset.Text = "30000";
+            }
+            else
+            {
+                Zmap_Offset = Convert.ToUInt16(textBox_ZmapOffset.Text);
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace System.Drawing
         /// <returns>Bitmap image.</returns>
         public static Bitmap ToBitmap(this UInt16IntensityImage image)
         {
-            return image.ToBitmap(UInt16.MaxValue);
+            return image.ToBitmap(UInt16.MaxValue, UInt16.MaxValue);
         }
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace System.Drawing
         /// </summary>
         /// <param name="image">Image to convert.</param>
         /// <returns>Bitmap image.</returns>
-        public static Bitmap ToBitmap(this UInt16IntensityImage image, UInt16 scalingMaxValue)
+        public static Bitmap ToBitmap(this UInt16IntensityImage image, UInt16 scalingMaxValue,UInt16 Zmap_Offset)
         {
             Bitmap bitmap = new Bitmap(image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
             byte[] imageData = new byte[bytesPerPixel * image.Width * image.Height];
-
+            
             for (int y = 0; y < image.Height; y++)
             {
                 int stereoOffset = y * image.Width;
@@ -43,7 +43,7 @@ namespace System.Drawing
                 for (int x = 0; x < image.Width; x++)
                 {
                     // Scale from 16-bit to 8-bit
-                    byte pixelValue = (byte)((image.Data[stereoOffset + x] / (double)scalingMaxValue) * byte.MaxValue);
+                    byte pixelValue = (byte)(((image.Data[stereoOffset + x] + Zmap_Offset )/ (double)scalingMaxValue) * byte.MaxValue);
 
                     // TODO: Scale to 8-bit instead of wrap
                     imageData[imageOffset + (x * bytesPerPixel)] = pixelValue;
