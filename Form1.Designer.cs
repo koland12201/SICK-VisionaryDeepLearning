@@ -51,6 +51,17 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button_ApplyROI = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.textBox_ROIy = new System.Windows.Forms.TextBox();
+            this.textBox_ROIx = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox_ROIw = new System.Windows.Forms.TextBox();
+            this.textBox_ROIh = new System.Windows.Forms.TextBox();
+            this.checkBox_RGBAsZmap = new System.Windows.Forms.CheckBox();
             this.trackBar_RatioFilter = new System.Windows.Forms.TrackBar();
             this.label7 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -58,7 +69,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.textBox_BackendPort = new System.Windows.Forms.TextBox();
-            this.checkBox_RGBAsZmap = new System.Windows.Forms.CheckBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button_AutoCali = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -66,6 +80,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_RatioFilter)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -99,7 +114,7 @@
             // 
             // button_Save_RGB
             // 
-            this.button_Save_RGB.Location = new System.Drawing.Point(12, 762);
+            this.button_Save_RGB.Location = new System.Drawing.Point(1243, 763);
             this.button_Save_RGB.Name = "button_Save_RGB";
             this.button_Save_RGB.Size = new System.Drawing.Size(75, 23);
             this.button_Save_RGB.TabIndex = 3;
@@ -109,15 +124,16 @@
             // 
             // textBox_Index
             // 
-            this.textBox_Index.Location = new System.Drawing.Point(12, 735);
+            this.textBox_Index.Location = new System.Drawing.Point(1243, 735);
             this.textBox_Index.Name = "textBox_Index";
-            this.textBox_Index.Size = new System.Drawing.Size(100, 22);
+            this.textBox_Index.Size = new System.Drawing.Size(75, 22);
             this.textBox_Index.TabIndex = 4;
+            this.textBox_Index.Text = "0";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 720);
+            this.label2.Location = new System.Drawing.Point(1205, 738);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 12);
             this.label2.TabIndex = 5;
@@ -135,11 +151,11 @@
             // 
             // button_Save_depth
             // 
-            this.button_Save_depth.Location = new System.Drawing.Point(12, 791);
+            this.button_Save_depth.Location = new System.Drawing.Point(1243, 790);
             this.button_Save_depth.Name = "button_Save_depth";
             this.button_Save_depth.Size = new System.Drawing.Size(75, 23);
             this.button_Save_depth.TabIndex = 9;
-            this.button_Save_depth.Text = "Save Dmap";
+            this.button_Save_depth.Text = "Save Zmap";
             this.button_Save_depth.UseVisualStyleBackColor = true;
             this.button_Save_depth.Click += new System.EventHandler(this.button_Save_depth_Click);
             // 
@@ -155,7 +171,7 @@
             // 
             // button_Save_mixed
             // 
-            this.button_Save_mixed.Location = new System.Drawing.Point(12, 820);
+            this.button_Save_mixed.Location = new System.Drawing.Point(1243, 818);
             this.button_Save_mixed.Name = "button_Save_mixed";
             this.button_Save_mixed.Size = new System.Drawing.Size(75, 23);
             this.button_Save_mixed.TabIndex = 11;
@@ -165,7 +181,7 @@
             // 
             // button_Save_all
             // 
-            this.button_Save_all.Location = new System.Drawing.Point(12, 849);
+            this.button_Save_all.Location = new System.Drawing.Point(1243, 847);
             this.button_Save_all.Name = "button_Save_all";
             this.button_Save_all.Size = new System.Drawing.Size(75, 23);
             this.button_Save_all.TabIndex = 12;
@@ -233,50 +249,61 @@
             // 
             // textBox_DynamicRange
             // 
-            this.textBox_DynamicRange.Location = new System.Drawing.Point(1218, 730);
+            this.textBox_DynamicRange.Location = new System.Drawing.Point(8, 10);
             this.textBox_DynamicRange.Name = "textBox_DynamicRange";
-            this.textBox_DynamicRange.Size = new System.Drawing.Size(100, 22);
+            this.textBox_DynamicRange.Size = new System.Drawing.Size(116, 22);
             this.textBox_DynamicRange.TabIndex = 19;
             this.textBox_DynamicRange.Text = "25000";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1102, 736);
+            this.label4.Location = new System.Drawing.Point(130, 16);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(113, 12);
+            this.label4.Size = new System.Drawing.Size(110, 12);
             this.label4.TabIndex = 20;
-            this.label4.Text = "Zmap Dynamic Range:";
+            this.label4.Text = "Zmap Dynamic Range";
             // 
             // textBox_ZmapOffset
             // 
-            this.textBox_ZmapOffset.Location = new System.Drawing.Point(1218, 758);
+            this.textBox_ZmapOffset.Location = new System.Drawing.Point(8, 40);
             this.textBox_ZmapOffset.Name = "textBox_ZmapOffset";
-            this.textBox_ZmapOffset.Size = new System.Drawing.Size(100, 22);
+            this.textBox_ZmapOffset.Size = new System.Drawing.Size(116, 22);
             this.textBox_ZmapOffset.TabIndex = 21;
             this.textBox_ZmapOffset.Text = "0";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1146, 761);
+            this.label5.Location = new System.Drawing.Point(130, 43);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 12);
+            this.label5.Size = new System.Drawing.Size(63, 12);
             this.label5.TabIndex = 22;
-            this.label5.Text = "Zmap Offset:";
+            this.label5.Text = "Zmap Offset";
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(678, 730);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(418, 140);
+            this.tabControl1.Size = new System.Drawing.Size(433, 140);
             this.tabControl1.TabIndex = 23;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button_ApplyROI);
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Controls.Add(this.textBox_ROIy);
+            this.tabPage1.Controls.Add(this.textBox_ROIx);
+            this.tabPage1.Controls.Add(this.label12);
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.label10);
+            this.tabPage1.Controls.Add(this.textBox_ROIw);
+            this.tabPage1.Controls.Add(this.textBox_ROIh);
             this.tabPage1.Controls.Add(this.checkBox_RGBAsZmap);
             this.tabPage1.Controls.Add(this.trackBar_RatioFilter);
             this.tabPage1.Controls.Add(this.label7);
@@ -284,10 +311,112 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(410, 114);
+            this.tabPage1.Size = new System.Drawing.Size(425, 114);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Box Detection Algorithm";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button_ApplyROI
+            // 
+            this.button_ApplyROI.Enabled = false;
+            this.button_ApplyROI.Location = new System.Drawing.Point(244, 50);
+            this.button_ApplyROI.Name = "button_ApplyROI";
+            this.button_ApplyROI.Size = new System.Drawing.Size(75, 23);
+            this.button_ApplyROI.TabIndex = 42;
+            this.button_ApplyROI.Text = "Apply ROI";
+            this.button_ApplyROI.UseVisualStyleBackColor = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(67, 55);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(16, 12);
+            this.label13.TabIndex = 41;
+            this.label13.Text = "Y:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(7, 55);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(16, 12);
+            this.label14.TabIndex = 40;
+            this.label14.Text = "X:";
+            // 
+            // textBox_ROIy
+            // 
+            this.textBox_ROIy.Enabled = false;
+            this.textBox_ROIy.Location = new System.Drawing.Point(89, 50);
+            this.textBox_ROIy.Name = "textBox_ROIy";
+            this.textBox_ROIy.Size = new System.Drawing.Size(27, 22);
+            this.textBox_ROIy.TabIndex = 39;
+            this.textBox_ROIy.Text = "0";
+            // 
+            // textBox_ROIx
+            // 
+            this.textBox_ROIx.Enabled = false;
+            this.textBox_ROIx.Location = new System.Drawing.Point(29, 50);
+            this.textBox_ROIx.Name = "textBox_ROIx";
+            this.textBox_ROIx.Size = new System.Drawing.Size(27, 22);
+            this.textBox_ROIx.TabIndex = 38;
+            this.textBox_ROIx.Text = "0";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(186, 55);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(19, 12);
+            this.label12.TabIndex = 37;
+            this.label12.Text = "W:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(131, 55);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(16, 12);
+            this.label11.TabIndex = 36;
+            this.label11.Text = "H:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(325, 55);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(88, 12);
+            this.label10.TabIndex = 35;
+            this.label10.Text = "Region of interest";
+            // 
+            // textBox_ROIw
+            // 
+            this.textBox_ROIw.Enabled = false;
+            this.textBox_ROIw.Location = new System.Drawing.Point(208, 50);
+            this.textBox_ROIw.Name = "textBox_ROIw";
+            this.textBox_ROIw.Size = new System.Drawing.Size(27, 22);
+            this.textBox_ROIw.TabIndex = 34;
+            this.textBox_ROIw.Text = "640";
+            // 
+            // textBox_ROIh
+            // 
+            this.textBox_ROIh.Enabled = false;
+            this.textBox_ROIh.Location = new System.Drawing.Point(153, 50);
+            this.textBox_ROIh.Name = "textBox_ROIh";
+            this.textBox_ROIh.Size = new System.Drawing.Size(27, 22);
+            this.textBox_ROIh.TabIndex = 33;
+            this.textBox_ROIh.Text = "512";
+            // 
+            // checkBox_RGBAsZmap
+            // 
+            this.checkBox_RGBAsZmap.AutoSize = true;
+            this.checkBox_RGBAsZmap.Enabled = false;
+            this.checkBox_RGBAsZmap.Location = new System.Drawing.Point(31, 28);
+            this.checkBox_RGBAsZmap.Name = "checkBox_RGBAsZmap";
+            this.checkBox_RGBAsZmap.Size = new System.Drawing.Size(110, 16);
+            this.checkBox_RGBAsZmap.TabIndex = 20;
+            this.checkBox_RGBAsZmap.Text = "Use RGB as Zmap";
+            this.checkBox_RGBAsZmap.UseVisualStyleBackColor = true;
             // 
             // trackBar_RatioFilter
             // 
@@ -320,7 +449,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(410, 114);
+            this.tabPage2.Size = new System.Drawing.Size(425, 114);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Backend Detection";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -362,16 +491,49 @@
             this.textBox_BackendPort.Text = "12201";
             this.textBox_BackendPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // checkBox_RGBAsZmap
+            // tabPage3
             // 
-            this.checkBox_RGBAsZmap.AutoSize = true;
-            this.checkBox_RGBAsZmap.Location = new System.Drawing.Point(31, 28);
-            this.checkBox_RGBAsZmap.Name = "checkBox_RGBAsZmap";
-            this.checkBox_RGBAsZmap.Size = new System.Drawing.Size(110, 16);
-            this.checkBox_RGBAsZmap.TabIndex = 20;
-            this.checkBox_RGBAsZmap.Text = "Use RGB as Zmap";
-            this.checkBox_RGBAsZmap.UseVisualStyleBackColor = true;
-            this.checkBox_RGBAsZmap.Visible = false;
+            this.tabPage3.Controls.Add(this.button_AutoCali);
+            this.tabPage3.Controls.Add(this.label15);
+            this.tabPage3.Controls.Add(this.textBox_BackgroundH);
+            this.tabPage3.Controls.Add(this.textBox_ZmapOffset);
+            this.tabPage3.Controls.Add(this.textBox_DynamicRange);
+            this.tabPage3.Controls.Add(this.label4);
+            this.tabPage3.Controls.Add(this.label5);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(425, 114);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Settings";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button_AutoCali
+            // 
+            this.button_AutoCali.Location = new System.Drawing.Point(320, 10);
+            this.button_AutoCali.Name = "button_AutoCali";
+            this.button_AutoCali.Size = new System.Drawing.Size(99, 23);
+            this.button_AutoCali.TabIndex = 26;
+            this.button_AutoCali.Text = "Auto calibration";
+            this.button_AutoCali.UseVisualStyleBackColor = true;
+            this.button_AutoCali.Click += new System.EventHandler(this.button_AutoCali_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(130, 71);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(115, 12);
+            this.label15.TabIndex = 25;
+            this.label15.Text = "Background height (m)";
+            // 
+            // textBox_BackgroundH
+            // 
+            this.textBox_BackgroundH.Location = new System.Drawing.Point(8, 68);
+            this.textBox_BackgroundH.Name = "textBox_BackgroundH";
+            this.textBox_BackgroundH.Size = new System.Drawing.Size(116, 22);
+            this.textBox_BackgroundH.TabIndex = 23;
+            this.textBox_BackgroundH.Text = "1.5";
             // 
             // Form1
             // 
@@ -380,10 +542,6 @@
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1345, 880);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox_ZmapOffset);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox_DynamicRange);
             this.Controls.Add(this.listBox_BoxList);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button_Connect);
@@ -411,6 +569,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_RatioFilter)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -449,6 +609,20 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkBox_RGBAsZmap;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button_ApplyROI;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox textBox_ROIy;
+        private System.Windows.Forms.TextBox textBox_ROIx;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox_ROIw;
+        private System.Windows.Forms.TextBox textBox_ROIh;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button button_AutoCali;
+        private System.Windows.Forms.TextBox textBox_BackgroundH;
     }
 }
 

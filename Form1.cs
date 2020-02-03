@@ -30,16 +30,24 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-
         int index = 0;
         Bitmap bitmap;
         Bitmap bitmap_RGB;
         Bitmap bitmap_Mixed;
         byte[] bitmap_arry;
         ushort[] ZMap_arry;
+        float CenterH;
+
+        //var settings
         ushort Zmap_DR;
         ushort Zmap_Offset;
         double RatioFilter;
+        float BackgroundH;
+        int ROIx;
+        int ROIy;
+        int ROIw;
+        int ROIh;
+       
         public Form1()
         {
             InitializeComponent();
@@ -49,8 +57,9 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
 
-
         }
+        
+        //connect to visionary
         private void button_Connect_Click(object sender, EventArgs e)
         {
             String host = textBox_IP.Text;
@@ -144,6 +153,8 @@ namespace WindowsFormsApp1
                 throw;
             }
             System.Threading.Thread.Sleep(1500);
+
+            //start image processing thread
             Task.Run(async () =>
             {
                 while (true)
@@ -157,12 +168,11 @@ namespace WindowsFormsApp1
                     //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
-                    //float z = pointCloud[250 * 640 + 320].Z;
+                    CenterH = pointCloud[250 * 640 + 320].Z;
                     // this.label1.Text = z.ToString();
 
                     //read and set range of textboxs
                     setTextboxRange();
-
 
                     bitmap = depthMap.ZMap.ToBitmap(Zmap_DR, Zmap_Offset);
                     this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
@@ -188,7 +198,7 @@ namespace WindowsFormsApp1
                         a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255));
 
 
-                        //a.ROI =new Rectangle(x, y, w+offset, h+offset);
+                        a.ROI =new Rectangle(ROIx ,ROIy ,ROIw , ROIh);
                         int cannytherhold = 100;
                         CvInvoke.Canny(a, b, cannytherhold/2, cannytherhold,3,false);
 
@@ -253,7 +263,23 @@ namespace WindowsFormsApp1
         {
             drawBox(200, 200, 100, 100);
         }
-
+        private void button_ApplyROI_Click(object sender, EventArgs e)
+        {
+            ROIx = Convert.ToInt32(textBox_ROIx.Text);
+            ROIy = Convert.ToInt32(textBox_ROIy.Text);
+            ROIw = Convert.ToInt32(textBox_ROIw.Text);
+            ROIh = Convert.ToInt32(textBox_ROIh.Text);
+        }
+        private void button_AutoCali_Click(object sender, EventArgs e)
+        {
+            textBox_BackgroundH.Text = CenterH.ToString();
+            textBox_DynamicRange.Text = (Math.Round(20000/CenterH)).ToString();
+            // (byte)(( + Zmap_Offset) / (double)scalingMaxValue) * byte.MaxValue);
+            // 0/ byte.MaxValue* (double)scalingMaxValue- Zmap[i2]= Zmap_Offset
+            //0 = Zmap - Zmap_Offset;
+            textBox_ZmapOffset.Text=(Math.Round(((double)bitmap.GetPixel(640 / 2, 512 / 2).R/(double)byte.MaxValue)*Int16.MaxValue)).ToString();
+            textBox_BackgroundH.Text = CenterH.ToString();
+        }
         private void button_Save_Click(object sender, EventArgs e)
         {
             index = Convert.ToInt32(textBox_Index.Text);
@@ -297,15 +323,26 @@ namespace WindowsFormsApp1
             if (checkBox_MinAreaRect.Checked == true)
             {
                 trackBar_RatioFilter.Enabled = true;
-                checkBox_RGBAsZmap.Visible = true;
+                checkBox_RGBAsZmap.Enabled = true;
+                button_ApplyROI.Enabled = true;
+                textBox_ROIx.Enabled = true;
+                textBox_ROIy.Enabled = true;
+                textBox_ROIw.Enabled = true;
+                textBox_ROIh.Enabled = true;
             }
             else
             {
                 trackBar_RatioFilter.Enabled = false;
-                checkBox_RGBAsZmap.Visible = false;
+                checkBox_RGBAsZmap.Enabled = false;
+                button_ApplyROI.Enabled = false;
+                textBox_ROIx.Enabled = false;
+                textBox_ROIy.Enabled = false;
+                textBox_ROIw.Enabled = false;
+                textBox_ROIh.Enabled = false;
             }
         }
 
+        //unused (for now)
         private byte[] ImageToByte(Bitmap img)
         {
             byte[] Stream = new byte[img.Width * img.Height * 3];
@@ -421,5 +458,7 @@ namespace WindowsFormsApp1
                 Zmap_Offset = Convert.ToUInt16(textBox_ZmapOffset.Text);
             }
         }
+
+
     }
 }
