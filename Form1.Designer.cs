@@ -34,14 +34,10 @@
             this.button_Save_RGB = new System.Windows.Forms.Button();
             this.textBox_Index = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.button_Save_depth = new System.Windows.Forms.Button();
             this.pictureBox_Mixed = new System.Windows.Forms.PictureBox();
             this.button_Save_mixed = new System.Windows.Forms.Button();
             this.button_Save_all = new System.Windows.Forms.Button();
-            this.textBox_IP = new System.Windows.Forms.TextBox();
-            this.button_Connect = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.checkBox_MinAreaRect = new System.Windows.Forms.CheckBox();
             this.listBox_BoxList = new System.Windows.Forms.ListBox();
             this.checkBox_UseBackend = new System.Windows.Forms.CheckBox();
@@ -73,6 +69,11 @@
             this.button_AutoCali = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
+            this.textBox_IP = new System.Windows.Forms.TextBox();
+            this.button_Connect = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label16 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -81,12 +82,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_RatioFilter)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(66, 216);
+            this.label1.Location = new System.Drawing.Point(130, 95);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(33, 12);
             this.label1.TabIndex = 0;
@@ -95,7 +97,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.Location = new System.Drawing.Point(157, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(496, 426);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -105,7 +107,7 @@
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox2.Location = new System.Drawing.Point(678, 12);
+            this.pictureBox2.Location = new System.Drawing.Point(524, 12);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(640, 512);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -114,7 +116,7 @@
             // 
             // button_Save_RGB
             // 
-            this.button_Save_RGB.Location = new System.Drawing.Point(1243, 763);
+            this.button_Save_RGB.Location = new System.Drawing.Point(15, 47);
             this.button_Save_RGB.Name = "button_Save_RGB";
             this.button_Save_RGB.Size = new System.Drawing.Size(75, 23);
             this.button_Save_RGB.TabIndex = 3;
@@ -124,7 +126,7 @@
             // 
             // textBox_Index
             // 
-            this.textBox_Index.Location = new System.Drawing.Point(1243, 735);
+            this.textBox_Index.Location = new System.Drawing.Point(50, 19);
             this.textBox_Index.Name = "textBox_Index";
             this.textBox_Index.Size = new System.Drawing.Size(75, 22);
             this.textBox_Index.TabIndex = 4;
@@ -133,25 +135,15 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1205, 738);
+            this.label2.Location = new System.Drawing.Point(131, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 12);
+            this.label2.Size = new System.Drawing.Size(81, 12);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Index";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(24, 231);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Test";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.label2.Text = "File Index (.jpg)";
             // 
             // button_Save_depth
             // 
-            this.button_Save_depth.Location = new System.Drawing.Point(1243, 790);
+            this.button_Save_depth.Location = new System.Drawing.Point(15, 74);
             this.button_Save_depth.Name = "button_Save_depth";
             this.button_Save_depth.Size = new System.Drawing.Size(75, 23);
             this.button_Save_depth.TabIndex = 9;
@@ -162,7 +154,7 @@
             // pictureBox_Mixed
             // 
             this.pictureBox_Mixed.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox_Mixed.Location = new System.Drawing.Point(157, 444);
+            this.pictureBox_Mixed.Location = new System.Drawing.Point(12, 444);
             this.pictureBox_Mixed.Name = "pictureBox_Mixed";
             this.pictureBox_Mixed.Size = new System.Drawing.Size(496, 426);
             this.pictureBox_Mixed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -171,7 +163,7 @@
             // 
             // button_Save_mixed
             // 
-            this.button_Save_mixed.Location = new System.Drawing.Point(1243, 818);
+            this.button_Save_mixed.Location = new System.Drawing.Point(96, 47);
             this.button_Save_mixed.Name = "button_Save_mixed";
             this.button_Save_mixed.Size = new System.Drawing.Size(75, 23);
             this.button_Save_mixed.TabIndex = 11;
@@ -181,41 +173,13 @@
             // 
             // button_Save_all
             // 
-            this.button_Save_all.Location = new System.Drawing.Point(1243, 847);
+            this.button_Save_all.Location = new System.Drawing.Point(96, 74);
             this.button_Save_all.Name = "button_Save_all";
             this.button_Save_all.Size = new System.Drawing.Size(75, 23);
             this.button_Save_all.TabIndex = 12;
             this.button_Save_all.Text = "Save All";
             this.button_Save_all.UseVisualStyleBackColor = true;
             this.button_Save_all.Click += new System.EventHandler(this.button_Save_all_Click);
-            // 
-            // textBox_IP
-            // 
-            this.textBox_IP.Location = new System.Drawing.Point(34, 12);
-            this.textBox_IP.Name = "textBox_IP";
-            this.textBox_IP.Size = new System.Drawing.Size(98, 22);
-            this.textBox_IP.TabIndex = 13;
-            this.textBox_IP.Text = "192.168.1.10";
-            this.textBox_IP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // button_Connect
-            // 
-            this.button_Connect.Location = new System.Drawing.Point(57, 40);
-            this.button_Connect.Name = "button_Connect";
-            this.button_Connect.Size = new System.Drawing.Size(75, 23);
-            this.button_Connect.TabIndex = 14;
-            this.button_Connect.Text = "Connect";
-            this.button_Connect.UseVisualStyleBackColor = true;
-            this.button_Connect.Click += new System.EventHandler(this.button_Connect_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 15);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(18, 12);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "IP:";
             // 
             // checkBox_MinAreaRect
             // 
@@ -230,11 +194,12 @@
             // 
             // listBox_BoxList
             // 
+            this.listBox_BoxList.Font = new System.Drawing.Font("Arial", 18F);
             this.listBox_BoxList.FormattingEnabled = true;
-            this.listBox_BoxList.ItemHeight = 12;
-            this.listBox_BoxList.Location = new System.Drawing.Point(678, 530);
+            this.listBox_BoxList.ItemHeight = 27;
+            this.listBox_BoxList.Location = new System.Drawing.Point(524, 530);
             this.listBox_BoxList.Name = "listBox_BoxList";
-            this.listBox_BoxList.Size = new System.Drawing.Size(640, 196);
+            this.listBox_BoxList.Size = new System.Drawing.Size(794, 193);
             this.listBox_BoxList.TabIndex = 17;
             // 
             // checkBox_UseBackend
@@ -286,7 +251,8 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(678, 730);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Location = new System.Drawing.Point(524, 729);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(433, 140);
@@ -325,6 +291,7 @@
             this.button_ApplyROI.TabIndex = 42;
             this.button_ApplyROI.Text = "Apply ROI";
             this.button_ApplyROI.UseVisualStyleBackColor = true;
+            this.button_ApplyROI.Click += new System.EventHandler(this.button_ApplyROI_Click);
             // 
             // label13
             // 
@@ -493,6 +460,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label16);
             this.tabPage3.Controls.Add(this.button_AutoCali);
             this.tabPage3.Controls.Add(this.label15);
             this.tabPage3.Controls.Add(this.textBox_BackgroundH);
@@ -500,6 +468,7 @@
             this.tabPage3.Controls.Add(this.textBox_DynamicRange);
             this.tabPage3.Controls.Add(this.label4);
             this.tabPage3.Controls.Add(this.label5);
+            this.tabPage3.Controls.Add(this.label1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -510,9 +479,9 @@
             // 
             // button_AutoCali
             // 
-            this.button_AutoCali.Location = new System.Drawing.Point(320, 10);
+            this.button_AutoCali.Location = new System.Drawing.Point(332, 40);
             this.button_AutoCali.Name = "button_AutoCali";
-            this.button_AutoCali.Size = new System.Drawing.Size(99, 23);
+            this.button_AutoCali.Size = new System.Drawing.Size(90, 23);
             this.button_AutoCali.TabIndex = 26;
             this.button_AutoCali.Text = "Auto calibration";
             this.button_AutoCali.UseVisualStyleBackColor = true;
@@ -535,6 +504,59 @@
             this.textBox_BackgroundH.TabIndex = 23;
             this.textBox_BackgroundH.Text = "1.5";
             // 
+            // textBox_IP
+            // 
+            this.textBox_IP.Location = new System.Drawing.Point(1133, 846);
+            this.textBox_IP.Name = "textBox_IP";
+            this.textBox_IP.Size = new System.Drawing.Size(98, 22);
+            this.textBox_IP.TabIndex = 13;
+            this.textBox_IP.Text = "192.168.1.10";
+            this.textBox_IP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // button_Connect
+            // 
+            this.button_Connect.Location = new System.Drawing.Point(1243, 845);
+            this.button_Connect.Name = "button_Connect";
+            this.button_Connect.Size = new System.Drawing.Size(75, 23);
+            this.button_Connect.TabIndex = 14;
+            this.button_Connect.Text = "Connect";
+            this.button_Connect.UseVisualStyleBackColor = true;
+            this.button_Connect.Click += new System.EventHandler(this.button_Connect_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1109, 849);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(18, 12);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "IP:";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.textBox_Index);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Controls.Add(this.button_Save_all);
+            this.tabPage4.Controls.Add(this.button_Save_RGB);
+            this.tabPage4.Controls.Add(this.button_Save_depth);
+            this.tabPage4.Controls.Add(this.button_Save_mixed);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(425, 114);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Save Image";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 95);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(117, 12);
+            this.label16.TabIndex = 27;
+            this.label16.Text = "Relative height (center):";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -546,17 +568,9 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button_Connect);
             this.Controls.Add(this.textBox_IP);
-            this.Controls.Add(this.button_Save_all);
-            this.Controls.Add(this.button_Save_mixed);
             this.Controls.Add(this.pictureBox_Mixed);
-            this.Controls.Add(this.button_Save_depth);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox_Index);
-            this.Controls.Add(this.button_Save_RGB);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Visionary S Demo- koland";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -571,6 +585,8 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -584,14 +600,10 @@
         private System.Windows.Forms.Button button_Save_RGB;
         private System.Windows.Forms.TextBox textBox_Index;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button_Save_depth;
         private System.Windows.Forms.PictureBox pictureBox_Mixed;
         private System.Windows.Forms.Button button_Save_mixed;
         private System.Windows.Forms.Button button_Save_all;
-        private System.Windows.Forms.TextBox textBox_IP;
-        private System.Windows.Forms.Button button_Connect;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkBox_MinAreaRect;
         private System.Windows.Forms.ListBox listBox_BoxList;
         private System.Windows.Forms.CheckBox checkBox_UseBackend;
@@ -623,6 +635,11 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button button_AutoCali;
         private System.Windows.Forms.TextBox textBox_BackgroundH;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox textBox_IP;
+        private System.Windows.Forms.Button button_Connect;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label16;
     }
 }
 

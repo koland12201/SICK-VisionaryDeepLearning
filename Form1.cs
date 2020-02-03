@@ -42,7 +42,7 @@ namespace WindowsFormsApp1
         ushort Zmap_DR;
         ushort Zmap_Offset;
         double RatioFilter;
-        float BackgroundH;
+        double BackgroundH=1.5;
         int ROIx;
         int ROIy;
         int ROIw;
@@ -202,7 +202,7 @@ namespace WindowsFormsApp1
                         int cannytherhold = 100;
                         CvInvoke.Canny(a, b, cannytherhold/2, cannytherhold,3,false);
 
-                        //enhance canny
+                        //enhance canny edges
                         Mat struct_element = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
                         CvInvoke.Dilate(b, b, struct_element, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(255, 255, 255));
 
@@ -211,7 +211,6 @@ namespace WindowsFormsApp1
 
                         Point[][] con1 = con.ToArrayOfArray();
                         PointF[][] con2 = Array.ConvertAll<Point[], PointF[]>(con1, new Converter<Point[], PointF[]>(PointToPointF));
-
 
                         listBox_BoxList.Items.Clear();
                         for (int i = 0; i < con.Size; i++)
@@ -225,10 +224,18 @@ namespace WindowsFormsApp1
                             {
                                 RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
 
-                                //find box height
-                                //float tempHeight = pointCloud[250 * 640 + 320].Z;
-                                //add to listbox
-                                listBox_BoxList.Items.Add("Box :" + "(" + rrec.Center.X + "," + rrec.Center.Y + ") Length: " + rrec.Size.Width + " Width: " + rrec.Size.Height + " Height: " );
+                                // find box height
+                                // float tempHeight = pointCloud[250 * 640 + 320].Z;
+                                // add to listbox
+                                // boxWidth = pxwidth/(height/const)
+                                // height/const = pxwidth/boxwidth
+                                // const = (boxwidth*height)/pxwidth
+
+                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Z)*1000);
+                                double pixelScale = (double)boxHeight/(double)61 ;
+                                int boxWidth = (int)(rrec.Size.Width* pixelScale);
+                                int boxLength = (int)(rrec.Size.Height* pixelScale); //370
+                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:"+boxHeight*boxWidth*boxLength+ "mm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
                                 for (int j = 0; j < pointfs.Length; j++)
@@ -273,12 +280,12 @@ namespace WindowsFormsApp1
         private void button_AutoCali_Click(object sender, EventArgs e)
         {
             textBox_BackgroundH.Text = CenterH.ToString();
-            textBox_DynamicRange.Text = (Math.Round(20000/CenterH)).ToString();
-            // (byte)(( + Zmap_Offset) / (double)scalingMaxValue) * byte.MaxValue);
-            // 0/ byte.MaxValue* (double)scalingMaxValue- Zmap[i2]= Zmap_Offset
-            //0 = Zmap - Zmap_Offset;
-            textBox_ZmapOffset.Text=(Math.Round(((double)bitmap.GetPixel(640 / 2, 512 / 2).R/(double)byte.MaxValue)*Int16.MaxValue)).ToString();
-            textBox_BackgroundH.Text = CenterH.ToString();
+            BackgroundH = CenterH;
+            // pixelValue = (byte)(((image.Data[stereoOffset + x] + Zmap_Offset )/ (double)scalingMaxValue) * byte.MaxValue);
+            // pixel = (byte)(((Zmap[i2]+Zmap_Offset) / (double)scalingMaxValue) * byte.MaxValue)
+            // (( pixel / byte.MaxValue ) *(double)Zmap_DR)-Zmap_arry[250 * 640 + 320]
+
+            textBox_ZmapOffset.Text = ((ushort)(((double)259 / (double)byte.MaxValue) * (double)Zmap_DR - ZMap_arry[250 * 640 + 320])).ToString();
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
@@ -457,8 +464,20 @@ namespace WindowsFormsApp1
             {
                 Zmap_Offset = Convert.ToUInt16(textBox_ZmapOffset.Text);
             }
+
+            //background height
+            if (textBox_BackgroundH.Text=="")
+            {
+                textBox_BackgroundH.Text = "1.5";
+            }
+            else if (Convert.ToDouble(textBox_BackgroundH.Text)>10)
+            {
+                textBox_BackgroundH.Text = "10";
+            }
+            else
+            {
+                BackgroundH = Convert.ToDouble(textBox_BackgroundH.Text);
+            }
         }
-
-
     }
 }
