@@ -226,8 +226,8 @@ namespace WindowsFormsApp1
 
                                 // find box height
                                 // float tempHeight = pointCloud[250 * 640 + 320].Z;
-                                // add to listbox
-
+                                
+                                //88 115
                                 //180 230
 
                                 //find box height
@@ -238,17 +238,32 @@ namespace WindowsFormsApp1
                                 {
                                     double test = (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X;
                                     double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X, 2) + Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Y, 2));
-                                    double boxCenterAngle = Math.Atan(boxCenterOffset / BackgroundH);
+                                    double boxCenterAngle = Math.Atan(boxCenterOffset*1.1 / BackgroundH);
                                     double heightMulti = 1 / Math.Cos(boxCenterAngle);
                                     boxHeight = (int)((double)boxHeight * heightMulti);
                                 }
 
-                                double unitOffset = 1.5;
-                                double distScaler = 450;
+
+                                
+
+                                double unitOffset = 2;
+                                double distScaler = 590;
                                 double pixelScale = 1+((double)boxHeight/ distScaler);
                                 int boxWidth = (int)((rrec.Size.Width* unitOffset )/ pixelScale);
                                 int boxLength = (int)((rrec.Size.Height* unitOffset )/ pixelScale);
-                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + "mm^3)");
+                                /*
+                                //remove resolution offset
+                                if (boxWidth<boxLength) 
+                                {
+                                    boxWidth = boxWidth - 10;
+                                }
+                                else
+                                {
+                                    boxLength = boxLength - 10;
+                                }*/
+
+                                // add to listbox
+                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" +boxLength*boxWidth*boxHeight+ "mm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
                                 for (int j = 0; j < pointfs.Length; j++)
