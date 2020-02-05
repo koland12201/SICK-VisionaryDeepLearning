@@ -11,3 +11,4 @@ bin/Debug/Emgu.CV.UI.xml
 bin/Debug/Emgu.CV.World.xml
 bin/Debug/OpenTK.GLControl.xml
 bin/Debug/ZedGraph.xml
+*.dll

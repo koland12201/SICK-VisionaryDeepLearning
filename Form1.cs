@@ -39,10 +39,12 @@ namespace WindowsFormsApp1
         float CenterH;
 
         //var settings
+        bool AngleCorr = true;
+        bool RGBAsZmap = false;
         ushort Zmap_DR;
         ushort Zmap_Offset;
         double RatioFilter;
-        double BackgroundH=1.5;
+        double BackgroundH=1.5; 
         int ROIx;
         int ROIy;
         int ROIw;
@@ -183,10 +185,7 @@ namespace WindowsFormsApp1
                     if (checkBox_MinAreaRect.Checked == true)
                     {
                         Bitmap TempMap = bitmap;
-                        if(checkBox_RGBAsZmap.Checked==true)
-                        {
-                            TempMap = bitmap_RGB;
-                        }
+                        if(RGBAsZmap==true){TempMap = bitmap_RGB;}
 
                         Image<Bgr, byte> a = new Image<Bgr, byte>(TempMap);
                         Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //edge detection
@@ -195,7 +194,8 @@ namespace WindowsFormsApp1
                         int Blue_threshold = 50; //0-255
                         int Green_threshold = 50; //0-255
                         int Red_threshold = 50; //0-255
-                        a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255));
+                        if (RGBAsZmap == false) { a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255)); }
+                        
 
 
                         a.ROI =new Rectangle(ROIx ,ROIy ,ROIw , ROIh);
@@ -227,15 +227,28 @@ namespace WindowsFormsApp1
                                 // find box height
                                 // float tempHeight = pointCloud[250 * 640 + 320].Z;
                                 // add to listbox
-                                // boxWidth = pxwidth/(height/const)
-                                // height/const = pxwidth/boxwidth
-                                // const = (boxwidth*height)/pxwidth
 
-                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Z)*1000);
-                                double pixelScale = (double)boxHeight/(double)61 ;
-                                int boxWidth = (int)(rrec.Size.Width* pixelScale);
-                                int boxLength = (int)(rrec.Size.Height* pixelScale); //370
-                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:"+boxHeight*boxWidth*boxLength+ "mm^3)");
+                                //180 230
+
+                                //find box height
+                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Z)*(double)1000);
+
+                                //apply sensor prespective angle correction
+                                if (AngleCorr == true)
+                                {
+                                    double test = (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X;
+                                    double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X, 2) + Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Y, 2));
+                                    double boxCenterAngle = Math.Atan(boxCenterOffset / BackgroundH);
+                                    double heightMulti = 1 / Math.Cos(boxCenterAngle);
+                                    boxHeight = (int)((double)boxHeight * heightMulti);
+                                }
+
+                                double unitOffset = 1.5;
+                                double distScaler = 450;
+                                double pixelScale = 1+((double)boxHeight/ distScaler);
+                                int boxWidth = (int)((rrec.Size.Width* unitOffset )/ pixelScale);
+                                int boxLength = (int)((rrec.Size.Height* unitOffset )/ pixelScale);
+                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + "mm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
                                 for (int j = 0; j < pointfs.Length; j++)
@@ -266,9 +279,19 @@ namespace WindowsFormsApp1
             });
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void checkBox_AngleCorr_CheckedChanged(object sender, EventArgs e)
         {
-            drawBox(200, 200, 100, 100);
+            if (checkBox_AngleCorr.Checked == true)
+            {AngleCorr = true;}
+            else
+            {AngleCorr = false;}
+        }
+        private void checkBox_RGBAsZmap_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox_RGBAsZmap.Checked==true)
+            {RGBAsZmap = true;}
+            else 
+            { RGBAsZmap = false; }
         }
         private void button_ApplyROI_Click(object sender, EventArgs e)
         {
@@ -332,6 +355,7 @@ namespace WindowsFormsApp1
                 trackBar_RatioFilter.Enabled = true;
                 checkBox_RGBAsZmap.Enabled = true;
                 button_ApplyROI.Enabled = true;
+                checkBox_AngleCorr.Enabled = true;
                 textBox_ROIx.Enabled = true;
                 textBox_ROIy.Enabled = true;
                 textBox_ROIw.Enabled = true;
@@ -342,6 +366,7 @@ namespace WindowsFormsApp1
                 trackBar_RatioFilter.Enabled = false;
                 checkBox_RGBAsZmap.Enabled = false;
                 button_ApplyROI.Enabled = false;
+                checkBox_AngleCorr.Enabled = false;
                 textBox_ROIx.Enabled = false;
                 textBox_ROIy.Enabled = false;
                 textBox_ROIw.Enabled = false;
@@ -434,7 +459,14 @@ namespace WindowsFormsApp1
             }
             return p;
         }
-        
+        double DegToRad(double degrees)
+        {
+            return degrees * Math.PI / 180.0;
+        }
+        double RadToDeg(double Rad)
+        {
+            return Rad * 180 / Math.PI;
+        }
         void setTextboxRange()
         {
             //zmap dynamic range
@@ -479,5 +511,7 @@ namespace WindowsFormsApp1
                 BackgroundH = Convert.ToDouble(textBox_BackgroundH.Text);
             }
         }
+
+
     }
 }

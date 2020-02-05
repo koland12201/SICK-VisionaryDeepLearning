@@ -66,14 +66,15 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBox_BackendPort = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label16 = new System.Windows.Forms.Label();
             this.button_AutoCali = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.textBox_IP = new System.Windows.Forms.TextBox();
             this.button_Connect = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label16 = new System.Windows.Forms.Label();
+            this.checkBox_AngleCorr = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -116,7 +117,7 @@
             // 
             // button_Save_RGB
             // 
-            this.button_Save_RGB.Location = new System.Drawing.Point(15, 47);
+            this.button_Save_RGB.Location = new System.Drawing.Point(96, 47);
             this.button_Save_RGB.Name = "button_Save_RGB";
             this.button_Save_RGB.Size = new System.Drawing.Size(75, 23);
             this.button_Save_RGB.TabIndex = 3;
@@ -143,7 +144,7 @@
             // 
             // button_Save_depth
             // 
-            this.button_Save_depth.Location = new System.Drawing.Point(15, 74);
+            this.button_Save_depth.Location = new System.Drawing.Point(15, 47);
             this.button_Save_depth.Name = "button_Save_depth";
             this.button_Save_depth.Size = new System.Drawing.Size(75, 23);
             this.button_Save_depth.TabIndex = 9;
@@ -163,7 +164,7 @@
             // 
             // button_Save_mixed
             // 
-            this.button_Save_mixed.Location = new System.Drawing.Point(96, 47);
+            this.button_Save_mixed.Location = new System.Drawing.Point(15, 74);
             this.button_Save_mixed.Name = "button_Save_mixed";
             this.button_Save_mixed.Size = new System.Drawing.Size(75, 23);
             this.button_Save_mixed.TabIndex = 11;
@@ -260,6 +261,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBox_AngleCorr);
             this.tabPage1.Controls.Add(this.button_ApplyROI);
             this.tabPage1.Controls.Add(this.label13);
             this.tabPage1.Controls.Add(this.label14);
@@ -384,6 +386,7 @@
             this.checkBox_RGBAsZmap.TabIndex = 20;
             this.checkBox_RGBAsZmap.Text = "Use RGB as Zmap";
             this.checkBox_RGBAsZmap.UseVisualStyleBackColor = true;
+            this.checkBox_RGBAsZmap.CheckedChanged += new System.EventHandler(this.checkBox_RGBAsZmap_CheckedChanged);
             // 
             // trackBar_RatioFilter
             // 
@@ -477,6 +480,15 @@
             this.tabPage3.Text = "Settings";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 95);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(117, 12);
+            this.label16.TabIndex = 27;
+            this.label16.Text = "Relative height (center):";
+            // 
             // button_AutoCali
             // 
             this.button_AutoCali.Location = new System.Drawing.Point(332, 40);
@@ -503,6 +515,22 @@
             this.textBox_BackgroundH.Size = new System.Drawing.Size(116, 22);
             this.textBox_BackgroundH.TabIndex = 23;
             this.textBox_BackgroundH.Text = "1.5";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.textBox_Index);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Controls.Add(this.button_Save_all);
+            this.tabPage4.Controls.Add(this.button_Save_RGB);
+            this.tabPage4.Controls.Add(this.button_Save_depth);
+            this.tabPage4.Controls.Add(this.button_Save_mixed);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(425, 114);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Save Image";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // textBox_IP
             // 
@@ -532,30 +560,19 @@
             this.label3.TabIndex = 15;
             this.label3.Text = "IP:";
             // 
-            // tabPage4
+            // checkBox_AngleCorr
             // 
-            this.tabPage4.Controls.Add(this.textBox_Index);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Controls.Add(this.button_Save_all);
-            this.tabPage4.Controls.Add(this.button_Save_RGB);
-            this.tabPage4.Controls.Add(this.button_Save_depth);
-            this.tabPage4.Controls.Add(this.button_Save_mixed);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(425, 114);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Save Image";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 95);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(117, 12);
-            this.label16.TabIndex = 27;
-            this.label16.Text = "Relative height (center):";
+            this.checkBox_AngleCorr.AutoSize = true;
+            this.checkBox_AngleCorr.Checked = true;
+            this.checkBox_AngleCorr.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_AngleCorr.Enabled = false;
+            this.checkBox_AngleCorr.Location = new System.Drawing.Point(147, 28);
+            this.checkBox_AngleCorr.Name = "checkBox_AngleCorr";
+            this.checkBox_AngleCorr.Size = new System.Drawing.Size(154, 16);
+            this.checkBox_AngleCorr.TabIndex = 43;
+            this.checkBox_AngleCorr.Text = "Prespective angle correction";
+            this.checkBox_AngleCorr.UseVisualStyleBackColor = true;
+            this.checkBox_AngleCorr.CheckedChanged += new System.EventHandler(this.checkBox_AngleCorr_CheckedChanged);
             // 
             // Form1
             // 
@@ -640,6 +657,7 @@
         private System.Windows.Forms.Button button_Connect;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.CheckBox checkBox_AngleCorr;
     }
 }
 
