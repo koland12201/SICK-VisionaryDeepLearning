@@ -37,6 +37,7 @@ namespace WindowsFormsApp1
         byte[] bitmap_arry;
         ushort[] ZMap_arry;
         float CenterH;
+        bool SaveQueue = false;
 
         //var settings
         bool AngleCorr = true;
@@ -45,7 +46,8 @@ namespace WindowsFormsApp1
         ushort Zmap_DR;
         ushort Zmap_Offset;
         double RatioFilter;
-        double BackgroundH=1.5; 
+        double BackgroundH=1.5;
+        double Rounding = 1;
         int ROIx=0;
         int ROIy=0;
         double ROIScale=1;
@@ -58,7 +60,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            textBox_Savepath.Text = AppDomain.CurrentDomain.BaseDirectory;
         }
         
         //connect to visionary
@@ -237,7 +239,6 @@ namespace WindowsFormsApp1
                                 //apply sensor prespective angle correction
                                 if (AngleCorr == true)
                                 {
-                                    double test = (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X;
                                     double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].X, 2) + Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].Y, 2));
                                     double boxCenterAngle = Math.Atan(boxCenterOffset*1.1 / BackgroundH);
                                     double heightMulti = 1 / Math.Cos(boxCenterAngle);
@@ -249,15 +250,35 @@ namespace WindowsFormsApp1
 
                                 int boxWidth =(int) (rrec.Size.Width*PixelScale);
                                 int boxLength = (int)(rrec.Size.Height* PixelScale);
+
+
+                                //rounding
+                                boxLength = (int)(Math.Round((double)boxLength / Rounding, MidpointRounding.AwayFromZero) * Rounding);
+                                boxWidth = (int)(Math.Round((double)boxWidth / Rounding, MidpointRounding.AwayFromZero) * Rounding);
+                                boxHeight = (int)(Math.Round((double)boxHeight / Rounding, MidpointRounding.AwayFromZero) * Rounding);
+
                                 double boxArea = ((double)boxLength/10) * ((double)boxWidth/10) * ((double)boxHeight/10) ;//cm
 
                                 // add to listbox
-                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + boxArea + "cm^3)");
+                                listBox_BoxList.Items.Add("Box (Length: " + boxLength+ "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + boxArea + "cm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
                                 for (int j = 0; j < pointfs.Length; j++)
                                     CvInvoke.Line(a, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new MCvScalar(0, 255, 0, 255), 4);
                             }
+                        }
+
+                        if (SaveQueue==true)
+                        {
+                            System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(textBox_Savepath.Text + "/Output/Detection Result/" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".txt");
+
+                            foreach (var item in listBox_BoxList.Items)
+                            {
+                                SaveFile.WriteLine(item);
+                            }
+
+                            SaveFile.Close();
+                            SaveQueue = false;
                         }
                         /*
                         for (int i = 0; i < con.Size; i++)
@@ -284,6 +305,17 @@ namespace WindowsFormsApp1
                     catch { }
                 }
             });
+        }
+        private void textBox_Rounding_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox_Rounding.Text=="")
+            {
+                textBox_Rounding.Text = "1";
+            }
+            else
+            {
+                Rounding = Convert.ToInt32(textBox_Rounding.Text);
+            }
         }
         private void trackBar_ROIx_Scroll(object sender, EventArgs e)
         {
@@ -368,6 +400,11 @@ namespace WindowsFormsApp1
             index++;
             textBox_Index.Text = index.ToString();
         }
+        private void button_SaveResult_Click(object sender, EventArgs e)
+        {
+            CreateDirectory();
+            SaveQueue = true;
+        }
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             RatioFilter = (double)trackBar_RatioFilter.Value / 20;
@@ -400,6 +437,7 @@ namespace WindowsFormsApp1
                 trackBar_ROIScale.Enabled = false;
             }
         }
+
 
         //unused (for now)
         private byte[] ImageToByte(Bitmap img)
@@ -557,7 +595,9 @@ namespace WindowsFormsApp1
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text+"/Output/rgb");
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/dep");
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/mixed");
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/Detection Result");
         }
+
 
     }
 }
