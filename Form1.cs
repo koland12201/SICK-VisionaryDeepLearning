@@ -58,7 +58,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
         
         //connect to visionary
@@ -191,11 +191,15 @@ namespace WindowsFormsApp1
                         Image<Bgr, byte> a = new Image<Bgr, byte>(TempMap);
                         Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //edge detection
                         Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //find contour
-                        a = ~a;
+                        
                         int Blue_threshold = 50; //0-255
                         int Green_threshold = 50; //0-255
                         int Red_threshold = 50; //0-255
-                        if (RGBAsZmap == false) { a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255)); }
+                        if (RGBAsZmap == false) 
+                        {
+                            a = ~a;
+                            a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255));
+                        }
                         
                         //set ROI
                         a.ROI =new Rectangle(ROIx ,ROIy ,(int)(640*ROIScale) , (int)(512*ROIScale));
@@ -329,34 +333,38 @@ namespace WindowsFormsApp1
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
+            CreateDirectory();
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap_RGB.Save(textBox_Savepath.Text + "/Output/rgb/rgb" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
 
         private void button_Save_depth_Click(object sender, EventArgs e)
         {
+            CreateDirectory();
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
+            bitmap.Save(textBox_Savepath.Text+"/Output/dep/dep" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
 
         private void button_Save_mixed_Click(object sender, EventArgs e)
         {
+            CreateDirectory();
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_Mixed.Save(textBox_Savepath.Text+"/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
 
         private void button_Save_all_Click(object sender, EventArgs e)
         {
+            CreateDirectory();
             index = Convert.ToInt32(textBox_Index.Text);
-            bitmap_RGB.Save("../Output/rgb/rgb" + index.ToString() + ".png");
-            bitmap.Save("../Output/dep/dep" + index.ToString() + ".png");
-            bitmap_Mixed.Save("../Output/mixed/mixed" + index.ToString() + ".png");
+            bitmap_RGB.Save(textBox_Savepath.Text+"/Output/rgb/rgb" + index.ToString() + ".png");
+            bitmap.Save(textBox_Savepath.Text+"/Output/dep/dep" + index.ToString() + ".png");
+            bitmap_Mixed.Save(textBox_Savepath.Text+"/Output/mixed/mixed" + index.ToString() + ".png");
             index++;
             textBox_Index.Text = index.ToString();
         }
@@ -542,10 +550,14 @@ namespace WindowsFormsApp1
             else
             {
                 MinPixelArea = Convert.ToUInt16(textBox_MinPixelArea.Text);
-            }
-            
+            }              
         }
-
+        void CreateDirectory ()
+        {
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text+"/Output/rgb");
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/dep");
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/mixed");
+        }
 
     }
 }

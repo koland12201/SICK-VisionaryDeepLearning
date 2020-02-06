@@ -71,6 +71,8 @@
             this.trackBar_ROIx = new System.Windows.Forms.TrackBar();
             this.textBox_MinPixelArea = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.textBox_Savepath = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -137,9 +139,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(131, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 12);
+            this.label2.Size = new System.Drawing.Size(84, 12);
             this.label2.TabIndex = 5;
-            this.label2.Text = "File Index (.jpg)";
+            this.label2.Text = "File Index (.png)";
             // 
             // button_Save_depth
             // 
@@ -431,6 +433,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label12);
+            this.tabPage4.Controls.Add(this.textBox_Savepath);
             this.tabPage4.Controls.Add(this.textBox_Index);
             this.tabPage4.Controls.Add(this.label2);
             this.tabPage4.Controls.Add(this.button_Save_all);
@@ -537,6 +541,23 @@
             this.label11.TabIndex = 45;
             this.label11.Text = "Min pixel area filter";
             // 
+            // textBox_Savepath
+            // 
+            this.textBox_Savepath.Location = new System.Drawing.Point(189, 49);
+            this.textBox_Savepath.Name = "textBox_Savepath";
+            this.textBox_Savepath.Size = new System.Drawing.Size(191, 22);
+            this.textBox_Savepath.TabIndex = 13;
+            this.textBox_Savepath.Text = "C:\\";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(386, 52);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(25, 12);
+            this.label12.TabIndex = 46;
+            this.label12.Text = "Path";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -624,6 +645,8 @@
         private System.Windows.Forms.TrackBar trackBar_ROIx;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox_MinPixelArea;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox_Savepath;
     }
 }
 
