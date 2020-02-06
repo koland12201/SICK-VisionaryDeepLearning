@@ -41,14 +41,14 @@ namespace WindowsFormsApp1
         //var settings
         bool AngleCorr = true;
         bool RGBAsZmap = false;
+        int MinPixelArea = 2000;
         ushort Zmap_DR;
         ushort Zmap_Offset;
         double RatioFilter;
         double BackgroundH=1.5; 
-        int ROIx;
-        int ROIy;
-        int ROIw;
-        int ROIh;
+        int ROIx=0;
+        int ROIy=0;
+        double ROIScale=1;
        
         public Form1()
         {
@@ -177,6 +177,7 @@ namespace WindowsFormsApp1
                     setTextboxRange();
 
                     bitmap = depthMap.ZMap.ToBitmap(Zmap_DR, Zmap_Offset);
+
                     this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
@@ -190,15 +191,16 @@ namespace WindowsFormsApp1
                         Image<Bgr, byte> a = new Image<Bgr, byte>(TempMap);
                         Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //edge detection
                         Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //find contour
-                        
+                        a = ~a;
                         int Blue_threshold = 50; //0-255
                         int Green_threshold = 50; //0-255
                         int Red_threshold = 50; //0-255
                         if (RGBAsZmap == false) { a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255)); }
                         
+                        //set ROI
+                        a.ROI =new Rectangle(ROIx ,ROIy ,(int)(640*ROIScale) , (int)(512*ROIScale));
 
-
-                        a.ROI =new Rectangle(ROIx ,ROIy ,ROIw , ROIh);
+                        //find edges
                         int cannytherhold = 100;
                         CvInvoke.Canny(a, b, cannytherhold/2, cannytherhold,3,false);
 
@@ -206,6 +208,7 @@ namespace WindowsFormsApp1
                         Mat struct_element = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
                         CvInvoke.Dilate(b, b, struct_element, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(255, 255, 255));
 
+                        //find contours
                         VectorOfVectorOfPoint con = new VectorOfVectorOfPoint(); 
                         CvInvoke.FindContours(b, con, c, RetrType.List, ChainApproxMethod.ChainApproxNone);
 
@@ -220,50 +223,32 @@ namespace WindowsFormsApp1
                             double tempArc = CvInvoke.ArcLength(con[i],true);
                             double tempScale = tempArea / Math.Pow(tempArc / 4, 2);
 
-                            if (tempArea >= 3000 && tempScale > RatioFilter)
+                            if (tempArea >= MinPixelArea && tempScale > RatioFilter)
                             {
                                 RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
 
-                                // find box height
-                                // float tempHeight = pointCloud[250 * 640 + 320].Z;
-                                
-                                //88 115
-                                //180 230
-
                                 //find box height
-                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Z)*(double)1000);
+                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].Z)*(double)1000);
 
                                 //apply sensor prespective angle correction
                                 if (AngleCorr == true)
                                 {
                                     double test = (double)pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X;
-                                    double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].X, 2) + Math.Pow(pointCloud[(int)rrec.Center.Y * 640 + (int)rrec.Center.X].Y, 2));
+                                    double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].X, 2) + Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].Y, 2));
                                     double boxCenterAngle = Math.Atan(boxCenterOffset*1.1 / BackgroundH);
                                     double heightMulti = 1 / Math.Cos(boxCenterAngle);
                                     boxHeight = (int)((double)boxHeight * heightMulti);
                                 }
-
-
                                 
+                                //find dimension of 1 pixel
+                                double PixelScale = (double)(pointCloud[(int)(ROIy+rrec.Center.Y) * 640 + (int)(ROIx+rrec.Center.X)-15].X- (double)pointCloud[(int)(ROIy+rrec.Center.Y )* 640 + (int)(ROIx+rrec.Center.X)+15].X)*1000.0/30.0;
 
-                                double unitOffset = 2;
-                                double distScaler = 590;
-                                double pixelScale = 1+((double)boxHeight/ distScaler);
-                                int boxWidth = (int)((rrec.Size.Width* unitOffset )/ pixelScale);
-                                int boxLength = (int)((rrec.Size.Height* unitOffset )/ pixelScale);
-                                /*
-                                //remove resolution offset
-                                if (boxWidth<boxLength) 
-                                {
-                                    boxWidth = boxWidth - 10;
-                                }
-                                else
-                                {
-                                    boxLength = boxLength - 10;
-                                }*/
+                                int boxWidth =(int) (rrec.Size.Width*PixelScale);
+                                int boxLength = (int)(rrec.Size.Height* PixelScale);
+                                double boxArea = ((double)boxLength/10) * ((double)boxWidth/10) * ((double)boxHeight/10) ;//cm
 
                                 // add to listbox
-                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" +boxLength*boxWidth*boxHeight+ "mm^3)");
+                                listBox_BoxList.Items.Add("Box (Length: " + boxLength + "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + boxArea + "cm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
                                 for (int j = 0; j < pointfs.Length; j++)
@@ -276,6 +261,9 @@ namespace WindowsFormsApp1
                             CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 255, 0, 255), 2);
                         }
                         */
+                        //162 217
+                        //170 210
+
                         this.pictureBox2.Image = a.ToBitmap();
                         this.pictureBox1.Image = bitmap_RGB;
                     }
@@ -293,6 +281,26 @@ namespace WindowsFormsApp1
                 }
             });
         }
+        private void trackBar_ROIx_Scroll(object sender, EventArgs e)
+        {
+            if (trackBar_ROIx.Value + ((double)trackBar_ROIScale.Value/10) * 640.0 < 640)
+            {
+                ROIx = trackBar_ROIx.Value;
+            }
+        }
+
+        private void trackBar_ROIy_Scroll(object sender, EventArgs e)
+        {
+            if ((512-trackBar_ROIy.Value )+ ((double)trackBar_ROIScale.Value / 10) * 512.0 < 512)
+            {
+                ROIy = 512 - trackBar_ROIy.Value;
+            }
+        }
+
+        private void trackBar_ROIScale_Scroll(object sender, EventArgs e)
+        {
+            ROIScale = (double)trackBar_ROIScale.Value/10.0;
+        }
 
         private void checkBox_AngleCorr_CheckedChanged(object sender, EventArgs e)
         {
@@ -308,13 +316,7 @@ namespace WindowsFormsApp1
             else 
             { RGBAsZmap = false; }
         }
-        private void button_ApplyROI_Click(object sender, EventArgs e)
-        {
-            ROIx = Convert.ToInt32(textBox_ROIx.Text);
-            ROIy = Convert.ToInt32(textBox_ROIy.Text);
-            ROIw = Convert.ToInt32(textBox_ROIw.Text);
-            ROIh = Convert.ToInt32(textBox_ROIh.Text);
-        }
+
         private void button_AutoCali_Click(object sender, EventArgs e)
         {
             textBox_BackgroundH.Text = CenterH.ToString();
@@ -369,23 +371,25 @@ namespace WindowsFormsApp1
             {
                 trackBar_RatioFilter.Enabled = true;
                 checkBox_RGBAsZmap.Enabled = true;
-                button_ApplyROI.Enabled = true;
                 checkBox_AngleCorr.Enabled = true;
-                textBox_ROIx.Enabled = true;
-                textBox_ROIy.Enabled = true;
-                textBox_ROIw.Enabled = true;
-                textBox_ROIh.Enabled = true;
+                textBox_MinPixelArea.Enabled = true;
+
+                //ROI
+                trackBar_ROIx.Enabled = true;
+                trackBar_ROIy.Enabled = true;
+                trackBar_ROIScale.Enabled = true;
             }
             else
             {
                 trackBar_RatioFilter.Enabled = false;
                 checkBox_RGBAsZmap.Enabled = false;
-                button_ApplyROI.Enabled = false;
                 checkBox_AngleCorr.Enabled = false;
-                textBox_ROIx.Enabled = false;
-                textBox_ROIy.Enabled = false;
-                textBox_ROIw.Enabled = false;
-                textBox_ROIh.Enabled = false;
+                textBox_MinPixelArea.Enabled = false;
+
+                //ROI
+                trackBar_ROIx.Enabled = false;
+                trackBar_ROIy.Enabled = false;
+                trackBar_ROIScale.Enabled = false;
             }
         }
 
@@ -525,6 +529,21 @@ namespace WindowsFormsApp1
             {
                 BackgroundH = Convert.ToDouble(textBox_BackgroundH.Text);
             }
+
+            //minimum pixel area filter
+            if (textBox_MinPixelArea.Text == "")
+            {
+                textBox_MinPixelArea.Text = "0";
+            }
+            else if (Convert.ToUInt32(textBox_MinPixelArea.Text) > 5000)
+            {
+                textBox_MinPixelArea.Text = "10000";
+            }
+            else
+            {
+                MinPixelArea = Convert.ToUInt16(textBox_MinPixelArea.Text);
+            }
+            
         }
 
 

@@ -47,16 +47,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.button_ApplyROI = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.textBox_ROIy = new System.Windows.Forms.TextBox();
-            this.textBox_ROIx = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBox_ROIw = new System.Windows.Forms.TextBox();
-            this.textBox_ROIh = new System.Windows.Forms.TextBox();
+            this.checkBox_AngleCorr = new System.Windows.Forms.CheckBox();
             this.checkBox_RGBAsZmap = new System.Windows.Forms.CheckBox();
             this.trackBar_RatioFilter = new System.Windows.Forms.TrackBar();
             this.label7 = new System.Windows.Forms.Label();
@@ -71,10 +62,15 @@
             this.label15 = new System.Windows.Forms.Label();
             this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
             this.textBox_IP = new System.Windows.Forms.TextBox();
             this.button_Connect = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.checkBox_AngleCorr = new System.Windows.Forms.CheckBox();
+            this.trackBar_ROIy = new System.Windows.Forms.TrackBar();
+            this.trackBar_ROIScale = new System.Windows.Forms.TrackBar();
+            this.trackBar_ROIx = new System.Windows.Forms.TrackBar();
+            this.textBox_MinPixelArea = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -84,6 +80,9 @@
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIScale)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIx)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -195,12 +194,12 @@
             // 
             // listBox_BoxList
             // 
-            this.listBox_BoxList.Font = new System.Drawing.Font("Arial", 18F);
+            this.listBox_BoxList.Font = new System.Drawing.Font("Arial", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox_BoxList.FormattingEnabled = true;
-            this.listBox_BoxList.ItemHeight = 27;
-            this.listBox_BoxList.Location = new System.Drawing.Point(524, 530);
+            this.listBox_BoxList.ItemHeight = 32;
+            this.listBox_BoxList.Location = new System.Drawing.Point(524, 581);
             this.listBox_BoxList.Name = "listBox_BoxList";
-            this.listBox_BoxList.Size = new System.Drawing.Size(794, 193);
+            this.listBox_BoxList.Size = new System.Drawing.Size(858, 196);
             this.listBox_BoxList.TabIndex = 17;
             // 
             // checkBox_UseBackend
@@ -253,7 +252,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(524, 729);
+            this.tabControl1.Location = new System.Drawing.Point(524, 794);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(433, 140);
@@ -261,17 +260,9 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.checkBox_AngleCorr);
-            this.tabPage1.Controls.Add(this.button_ApplyROI);
-            this.tabPage1.Controls.Add(this.label13);
-            this.tabPage1.Controls.Add(this.label14);
-            this.tabPage1.Controls.Add(this.textBox_ROIy);
-            this.tabPage1.Controls.Add(this.textBox_ROIx);
-            this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.textBox_ROIw);
-            this.tabPage1.Controls.Add(this.textBox_ROIh);
+            this.tabPage1.Controls.Add(this.textBox_MinPixelArea);
+            this.tabPage1.Controls.Add(this.checkBox_AngleCorr);
             this.tabPage1.Controls.Add(this.checkBox_RGBAsZmap);
             this.tabPage1.Controls.Add(this.trackBar_RatioFilter);
             this.tabPage1.Controls.Add(this.label7);
@@ -284,97 +275,19 @@
             this.tabPage1.Text = "Box Detection Algorithm";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // button_ApplyROI
+            // checkBox_AngleCorr
             // 
-            this.button_ApplyROI.Enabled = false;
-            this.button_ApplyROI.Location = new System.Drawing.Point(244, 50);
-            this.button_ApplyROI.Name = "button_ApplyROI";
-            this.button_ApplyROI.Size = new System.Drawing.Size(75, 23);
-            this.button_ApplyROI.TabIndex = 42;
-            this.button_ApplyROI.Text = "Apply ROI";
-            this.button_ApplyROI.UseVisualStyleBackColor = true;
-            this.button_ApplyROI.Click += new System.EventHandler(this.button_ApplyROI_Click);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(67, 55);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(16, 12);
-            this.label13.TabIndex = 41;
-            this.label13.Text = "Y:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(7, 55);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(16, 12);
-            this.label14.TabIndex = 40;
-            this.label14.Text = "X:";
-            // 
-            // textBox_ROIy
-            // 
-            this.textBox_ROIy.Enabled = false;
-            this.textBox_ROIy.Location = new System.Drawing.Point(89, 50);
-            this.textBox_ROIy.Name = "textBox_ROIy";
-            this.textBox_ROIy.Size = new System.Drawing.Size(27, 22);
-            this.textBox_ROIy.TabIndex = 39;
-            this.textBox_ROIy.Text = "0";
-            // 
-            // textBox_ROIx
-            // 
-            this.textBox_ROIx.Enabled = false;
-            this.textBox_ROIx.Location = new System.Drawing.Point(29, 50);
-            this.textBox_ROIx.Name = "textBox_ROIx";
-            this.textBox_ROIx.Size = new System.Drawing.Size(27, 22);
-            this.textBox_ROIx.TabIndex = 38;
-            this.textBox_ROIx.Text = "0";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(186, 55);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(19, 12);
-            this.label12.TabIndex = 37;
-            this.label12.Text = "W:";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(131, 55);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(16, 12);
-            this.label11.TabIndex = 36;
-            this.label11.Text = "H:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(325, 55);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(88, 12);
-            this.label10.TabIndex = 35;
-            this.label10.Text = "Region of interest";
-            // 
-            // textBox_ROIw
-            // 
-            this.textBox_ROIw.Enabled = false;
-            this.textBox_ROIw.Location = new System.Drawing.Point(208, 50);
-            this.textBox_ROIw.Name = "textBox_ROIw";
-            this.textBox_ROIw.Size = new System.Drawing.Size(27, 22);
-            this.textBox_ROIw.TabIndex = 34;
-            this.textBox_ROIw.Text = "640";
-            // 
-            // textBox_ROIh
-            // 
-            this.textBox_ROIh.Enabled = false;
-            this.textBox_ROIh.Location = new System.Drawing.Point(153, 50);
-            this.textBox_ROIh.Name = "textBox_ROIh";
-            this.textBox_ROIh.Size = new System.Drawing.Size(27, 22);
-            this.textBox_ROIh.TabIndex = 33;
-            this.textBox_ROIh.Text = "512";
+            this.checkBox_AngleCorr.AutoSize = true;
+            this.checkBox_AngleCorr.Checked = true;
+            this.checkBox_AngleCorr.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_AngleCorr.Enabled = false;
+            this.checkBox_AngleCorr.Location = new System.Drawing.Point(147, 28);
+            this.checkBox_AngleCorr.Name = "checkBox_AngleCorr";
+            this.checkBox_AngleCorr.Size = new System.Drawing.Size(154, 16);
+            this.checkBox_AngleCorr.TabIndex = 43;
+            this.checkBox_AngleCorr.Text = "Prespective angle correction";
+            this.checkBox_AngleCorr.UseVisualStyleBackColor = true;
+            this.checkBox_AngleCorr.CheckedChanged += new System.EventHandler(this.checkBox_AngleCorr_CheckedChanged);
             // 
             // checkBox_RGBAsZmap
             // 
@@ -392,18 +305,18 @@
             // 
             this.trackBar_RatioFilter.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBar_RatioFilter.Enabled = false;
-            this.trackBar_RatioFilter.Location = new System.Drawing.Point(99, 75);
+            this.trackBar_RatioFilter.Location = new System.Drawing.Point(99, 73);
             this.trackBar_RatioFilter.Maximum = 20;
             this.trackBar_RatioFilter.Name = "trackBar_RatioFilter";
             this.trackBar_RatioFilter.Size = new System.Drawing.Size(305, 45);
             this.trackBar_RatioFilter.TabIndex = 19;
-            this.trackBar_RatioFilter.Value = 4;
+            this.trackBar_RatioFilter.Value = 10;
             this.trackBar_RatioFilter.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 85);
+            this.label7.Location = new System.Drawing.Point(6, 81);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(87, 12);
             this.label7.TabIndex = 18;
@@ -532,9 +445,18 @@
             this.tabPage4.Text = "Save Image";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(1263, 12);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(47, 12);
+            this.label10.TabIndex = 35;
+            this.label10.Text = "ROI Size";
+            // 
             // textBox_IP
             // 
-            this.textBox_IP.Location = new System.Drawing.Point(1133, 846);
+            this.textBox_IP.Location = new System.Drawing.Point(1192, 912);
             this.textBox_IP.Name = "textBox_IP";
             this.textBox_IP.Size = new System.Drawing.Size(98, 22);
             this.textBox_IP.TabIndex = 13;
@@ -543,7 +465,7 @@
             // 
             // button_Connect
             // 
-            this.button_Connect.Location = new System.Drawing.Point(1243, 845);
+            this.button_Connect.Location = new System.Drawing.Point(1302, 911);
             this.button_Connect.Name = "button_Connect";
             this.button_Connect.Size = new System.Drawing.Size(75, 23);
             this.button_Connect.TabIndex = 14;
@@ -554,32 +476,76 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1109, 849);
+            this.label3.Location = new System.Drawing.Point(1168, 915);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 12);
             this.label3.TabIndex = 15;
             this.label3.Text = "IP:";
             // 
-            // checkBox_AngleCorr
+            // trackBar_ROIy
             // 
-            this.checkBox_AngleCorr.AutoSize = true;
-            this.checkBox_AngleCorr.Checked = true;
-            this.checkBox_AngleCorr.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_AngleCorr.Enabled = false;
-            this.checkBox_AngleCorr.Location = new System.Drawing.Point(147, 28);
-            this.checkBox_AngleCorr.Name = "checkBox_AngleCorr";
-            this.checkBox_AngleCorr.Size = new System.Drawing.Size(154, 16);
-            this.checkBox_AngleCorr.TabIndex = 43;
-            this.checkBox_AngleCorr.Text = "Prespective angle correction";
-            this.checkBox_AngleCorr.UseVisualStyleBackColor = true;
-            this.checkBox_AngleCorr.CheckedChanged += new System.EventHandler(this.checkBox_AngleCorr_CheckedChanged);
+            this.trackBar_ROIy.Enabled = false;
+            this.trackBar_ROIy.LargeChange = 10;
+            this.trackBar_ROIy.Location = new System.Drawing.Point(1169, 12);
+            this.trackBar_ROIy.Maximum = 512;
+            this.trackBar_ROIy.Name = "trackBar_ROIy";
+            this.trackBar_ROIy.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.trackBar_ROIy.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.trackBar_ROIy.Size = new System.Drawing.Size(45, 526);
+            this.trackBar_ROIy.TabIndex = 43;
+            this.trackBar_ROIy.Value = 512;
+            this.trackBar_ROIy.Scroll += new System.EventHandler(this.trackBar_ROIy_Scroll);
+            // 
+            // trackBar_ROIScale
+            // 
+            this.trackBar_ROIScale.Enabled = false;
+            this.trackBar_ROIScale.LargeChange = 3;
+            this.trackBar_ROIScale.Location = new System.Drawing.Point(1220, 27);
+            this.trackBar_ROIScale.Minimum = 1;
+            this.trackBar_ROIScale.Name = "trackBar_ROIScale";
+            this.trackBar_ROIScale.Size = new System.Drawing.Size(157, 45);
+            this.trackBar_ROIScale.TabIndex = 44;
+            this.trackBar_ROIScale.Value = 10;
+            this.trackBar_ROIScale.Scroll += new System.EventHandler(this.trackBar_ROIScale_Scroll);
+            // 
+            // trackBar_ROIx
+            // 
+            this.trackBar_ROIx.Enabled = false;
+            this.trackBar_ROIx.LargeChange = 10;
+            this.trackBar_ROIx.Location = new System.Drawing.Point(514, 530);
+            this.trackBar_ROIx.Maximum = 640;
+            this.trackBar_ROIx.Name = "trackBar_ROIx";
+            this.trackBar_ROIx.Size = new System.Drawing.Size(650, 45);
+            this.trackBar_ROIx.TabIndex = 45;
+            this.trackBar_ROIx.Scroll += new System.EventHandler(this.trackBar_ROIx_Scroll);
+            // 
+            // textBox_MinPixelArea
+            // 
+            this.textBox_MinPixelArea.Enabled = false;
+            this.textBox_MinPixelArea.Location = new System.Drawing.Point(8, 45);
+            this.textBox_MinPixelArea.Name = "textBox_MinPixelArea";
+            this.textBox_MinPixelArea.Size = new System.Drawing.Size(51, 22);
+            this.textBox_MinPixelArea.TabIndex = 44;
+            this.textBox_MinPixelArea.Text = "2000";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(65, 48);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(97, 12);
+            this.label11.TabIndex = 45;
+            this.label11.Text = "Min pixel area filter";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(1345, 880);
+            this.ClientSize = new System.Drawing.Size(1394, 946);
+            this.Controls.Add(this.trackBar_ROIx);
+            this.Controls.Add(this.trackBar_ROIScale);
+            this.Controls.Add(this.trackBar_ROIy);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.listBox_BoxList);
             this.Controls.Add(this.label3);
@@ -587,6 +553,7 @@
             this.Controls.Add(this.textBox_IP);
             this.Controls.Add(this.pictureBox_Mixed);
             this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Visionary S Demo- koland";
@@ -604,6 +571,9 @@
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIScale)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIx)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -639,16 +609,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkBox_RGBAsZmap;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button_ApplyROI;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox textBox_ROIy;
-        private System.Windows.Forms.TextBox textBox_ROIx;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox_ROIw;
-        private System.Windows.Forms.TextBox textBox_ROIh;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button button_AutoCali;
         private System.Windows.Forms.TextBox textBox_BackgroundH;
@@ -658,6 +619,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox checkBox_AngleCorr;
+        private System.Windows.Forms.TrackBar trackBar_ROIy;
+        private System.Windows.Forms.TrackBar trackBar_ROIScale;
+        private System.Windows.Forms.TrackBar trackBar_ROIx;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox_MinPixelArea;
     }
 }
 
