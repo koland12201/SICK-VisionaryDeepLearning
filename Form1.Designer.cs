@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -47,8 +48,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
             this.button_SaveResult = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
+            this.textBox_Rounding = new System.Windows.Forms.TextBox();
             this.textBox_MinPixelArea = new System.Windows.Forms.TextBox();
             this.checkBox_AngleCorr = new System.Windows.Forms.CheckBox();
             this.checkBox_RGBAsZmap = new System.Windows.Forms.CheckBox();
@@ -60,10 +63,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBox_BackendPort = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label13 = new System.Windows.Forms.Label();
-            this.textBox_Rounding = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox_OffsetSafety = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.button_AutoCali = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -76,6 +80,9 @@
             this.trackBar_ROIy = new System.Windows.Forms.TrackBar();
             this.trackBar_ROIScale = new System.Windows.Forms.TrackBar();
             this.trackBar_ROIx = new System.Windows.Forms.TrackBar();
+            this.button_Help = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.button_SavePointCloud = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -84,6 +91,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_RatioFilter)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIScale)).BeginInit();
@@ -126,6 +134,7 @@
             this.button_Save_RGB.Size = new System.Drawing.Size(75, 23);
             this.button_Save_RGB.TabIndex = 3;
             this.button_Save_RGB.Text = "Save RGB";
+            this.toolTip.SetToolTip(this.button_Save_RGB, "Save RGB image to path");
             this.button_Save_RGB.UseVisualStyleBackColor = true;
             this.button_Save_RGB.Click += new System.EventHandler(this.button_Save_Click);
             // 
@@ -153,6 +162,7 @@
             this.button_Save_depth.Size = new System.Drawing.Size(75, 23);
             this.button_Save_depth.TabIndex = 9;
             this.button_Save_depth.Text = "Save Zmap";
+            this.toolTip.SetToolTip(this.button_Save_depth, "Save Zmap to path");
             this.button_Save_depth.UseVisualStyleBackColor = true;
             this.button_Save_depth.Click += new System.EventHandler(this.button_Save_depth_Click);
             // 
@@ -173,6 +183,7 @@
             this.button_Save_mixed.Size = new System.Drawing.Size(75, 23);
             this.button_Save_mixed.TabIndex = 11;
             this.button_Save_mixed.Text = "Save Mixed";
+            this.toolTip.SetToolTip(this.button_Save_mixed, "Save Mixed image to path");
             this.button_Save_mixed.UseVisualStyleBackColor = true;
             this.button_Save_mixed.Click += new System.EventHandler(this.button_Save_mixed_Click);
             // 
@@ -183,6 +194,7 @@
             this.button_Save_all.Size = new System.Drawing.Size(75, 23);
             this.button_Save_all.TabIndex = 12;
             this.button_Save_all.Text = "Save All";
+            this.toolTip.SetToolTip(this.button_Save_all, "Save all Images to path");
             this.button_Save_all.UseVisualStyleBackColor = true;
             this.button_Save_all.Click += new System.EventHandler(this.button_Save_all_Click);
             // 
@@ -194,6 +206,7 @@
             this.checkBox_MinAreaRect.Size = new System.Drawing.Size(294, 16);
             this.checkBox_MinAreaRect.TabIndex = 16;
             this.checkBox_MinAreaRect.Text = "locate boxes (Zmap, locate box via contour MinAreaRect)";
+            this.toolTip.SetToolTip(this.checkBox_MinAreaRect, "Enable box detection");
             this.checkBox_MinAreaRect.UseVisualStyleBackColor = true;
             this.checkBox_MinAreaRect.CheckedChanged += new System.EventHandler(this.checkBox_MinAreaRect_CheckedChanged);
             // 
@@ -215,6 +228,7 @@
             this.checkBox_UseBackend.Size = new System.Drawing.Size(108, 16);
             this.checkBox_UseBackend.TabIndex = 18;
             this.checkBox_UseBackend.Text = "Use Backend ROI";
+            this.toolTip.SetToolTip(this.checkBox_UseBackend, "Enables backend input");
             this.checkBox_UseBackend.UseVisualStyleBackColor = true;
             // 
             // textBox_DynamicRange
@@ -224,6 +238,7 @@
             this.textBox_DynamicRange.Size = new System.Drawing.Size(116, 22);
             this.textBox_DynamicRange.TabIndex = 19;
             this.textBox_DynamicRange.Text = "25000";
+            this.toolTip.SetToolTip(this.textBox_DynamicRange, "range of byte, when convered from int16");
             // 
             // label4
             // 
@@ -233,6 +248,7 @@
             this.label4.Size = new System.Drawing.Size(110, 12);
             this.label4.TabIndex = 20;
             this.label4.Text = "Zmap Dynamic Range";
+            this.toolTip.SetToolTip(this.label4, "range of byte, when convered from int16");
             // 
             // textBox_ZmapOffset
             // 
@@ -265,8 +281,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label13);
             this.tabPage1.Controls.Add(this.button_SaveResult);
             this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.textBox_Rounding);
             this.tabPage1.Controls.Add(this.textBox_MinPixelArea);
             this.tabPage1.Controls.Add(this.checkBox_AngleCorr);
             this.tabPage1.Controls.Add(this.checkBox_RGBAsZmap);
@@ -281,6 +299,15 @@
             this.tabPage1.Text = "Box Detection Algorithm";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(237, 53);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(116, 12);
+            this.label13.TabIndex = 47;
+            this.label13.Text = "Detection step size(mm)";
+            // 
             // button_SaveResult
             // 
             this.button_SaveResult.Location = new System.Drawing.Point(346, 6);
@@ -288,6 +315,7 @@
             this.button_SaveResult.Size = new System.Drawing.Size(73, 23);
             this.button_SaveResult.TabIndex = 47;
             this.button_SaveResult.Text = "Save Result";
+            this.toolTip.SetToolTip(this.button_SaveResult, "Save detection result in detected box list");
             this.button_SaveResult.UseVisualStyleBackColor = true;
             this.button_SaveResult.Click += new System.EventHandler(this.button_SaveResult_Click);
             // 
@@ -299,6 +327,18 @@
             this.label11.Size = new System.Drawing.Size(97, 12);
             this.label11.TabIndex = 45;
             this.label11.Text = "Min pixel area filter";
+            this.toolTip.SetToolTip(this.label11, "Filters away false detection via minimum area");
+            // 
+            // textBox_Rounding
+            // 
+            this.textBox_Rounding.Enabled = false;
+            this.textBox_Rounding.Location = new System.Drawing.Point(177, 50);
+            this.textBox_Rounding.Name = "textBox_Rounding";
+            this.textBox_Rounding.Size = new System.Drawing.Size(54, 22);
+            this.textBox_Rounding.TabIndex = 46;
+            this.textBox_Rounding.Text = "1";
+            this.toolTip.SetToolTip(this.textBox_Rounding, "Detection Result W/L/H will round to this number");
+            this.textBox_Rounding.TextChanged += new System.EventHandler(this.textBox_Rounding_TextChanged);
             // 
             // textBox_MinPixelArea
             // 
@@ -308,6 +348,7 @@
             this.textBox_MinPixelArea.Size = new System.Drawing.Size(51, 22);
             this.textBox_MinPixelArea.TabIndex = 44;
             this.textBox_MinPixelArea.Text = "2000";
+            this.toolTip.SetToolTip(this.textBox_MinPixelArea, "Filters away false detection via minimum area");
             // 
             // checkBox_AngleCorr
             // 
@@ -320,6 +361,7 @@
             this.checkBox_AngleCorr.Size = new System.Drawing.Size(154, 16);
             this.checkBox_AngleCorr.TabIndex = 43;
             this.checkBox_AngleCorr.Text = "Prespective angle correction";
+            this.toolTip.SetToolTip(this.checkBox_AngleCorr, "Corrects the height Z due to box X/Y axis offset");
             this.checkBox_AngleCorr.UseVisualStyleBackColor = true;
             this.checkBox_AngleCorr.CheckedChanged += new System.EventHandler(this.checkBox_AngleCorr_CheckedChanged);
             // 
@@ -332,6 +374,7 @@
             this.checkBox_RGBAsZmap.Size = new System.Drawing.Size(110, 16);
             this.checkBox_RGBAsZmap.TabIndex = 20;
             this.checkBox_RGBAsZmap.Text = "Use RGB as Zmap";
+            this.toolTip.SetToolTip(this.checkBox_RGBAsZmap, "replace Box Detection input with RGB image");
             this.checkBox_RGBAsZmap.UseVisualStyleBackColor = true;
             this.checkBox_RGBAsZmap.CheckedChanged += new System.EventHandler(this.checkBox_RGBAsZmap_CheckedChanged);
             // 
@@ -407,13 +450,12 @@
             this.textBox_BackendPort.TabIndex = 24;
             this.textBox_BackendPort.Text = "12201";
             this.textBox_BackendPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.textBox_BackendPort, "Port for backend detection, set this before connecting");
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label13);
-            this.tabPage3.Controls.Add(this.textBox_Rounding);
+            this.tabPage3.Controls.Add(this.groupBox1);
             this.tabPage3.Controls.Add(this.label16);
-            this.tabPage3.Controls.Add(this.button_AutoCali);
             this.tabPage3.Controls.Add(this.label15);
             this.tabPage3.Controls.Add(this.textBox_BackgroundH);
             this.tabPage3.Controls.Add(this.textBox_ZmapOffset);
@@ -429,23 +471,46 @@
             this.tabPage3.Text = "Settings";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label13
+            // groupBox1
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(306, 16);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(116, 12);
-            this.label13.TabIndex = 47;
-            this.label13.Text = "Detection step size(mm)";
+            this.groupBox1.Controls.Add(this.textBox_OffsetSafety);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.button_AutoCali);
+            this.groupBox1.Location = new System.Drawing.Point(307, 8);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(115, 100);
+            this.groupBox1.TabIndex = 46;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Calibration";
             // 
-            // textBox_Rounding
+            // textBox_OffsetSafety
             // 
-            this.textBox_Rounding.Location = new System.Drawing.Point(246, 10);
-            this.textBox_Rounding.Name = "textBox_Rounding";
-            this.textBox_Rounding.Size = new System.Drawing.Size(54, 22);
-            this.textBox_Rounding.TabIndex = 46;
-            this.textBox_Rounding.Text = "1";
-            this.textBox_Rounding.TextChanged += new System.EventHandler(this.textBox_Rounding_TextChanged);
+            this.textBox_OffsetSafety.Location = new System.Drawing.Point(15, 21);
+            this.textBox_OffsetSafety.Name = "textBox_OffsetSafety";
+            this.textBox_OffsetSafety.Size = new System.Drawing.Size(20, 22);
+            this.textBox_OffsetSafety.TabIndex = 28;
+            this.textBox_OffsetSafety.Text = "4";
+            this.toolTip.SetToolTip(this.textBox_OffsetSafety, "margin of whats considered as background");
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(42, 24);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(68, 12);
+            this.label14.TabIndex = 29;
+            this.label14.Text = "Offset Safety ";
+            this.toolTip.SetToolTip(this.label14, "margin of whats considered as background");
+            // 
+            // button_AutoCali
+            // 
+            this.button_AutoCali.Location = new System.Drawing.Point(15, 63);
+            this.button_AutoCali.Name = "button_AutoCali";
+            this.button_AutoCali.Size = new System.Drawing.Size(90, 23);
+            this.button_AutoCali.TabIndex = 26;
+            this.button_AutoCali.Text = "Auto calibration";
+            this.button_AutoCali.UseVisualStyleBackColor = true;
+            this.button_AutoCali.Click += new System.EventHandler(this.button_AutoCali_Click);
             // 
             // label16
             // 
@@ -455,16 +520,6 @@
             this.label16.Size = new System.Drawing.Size(117, 12);
             this.label16.TabIndex = 27;
             this.label16.Text = "Relative height (center):";
-            // 
-            // button_AutoCali
-            // 
-            this.button_AutoCali.Location = new System.Drawing.Point(332, 40);
-            this.button_AutoCali.Name = "button_AutoCali";
-            this.button_AutoCali.Size = new System.Drawing.Size(90, 23);
-            this.button_AutoCali.TabIndex = 26;
-            this.button_AutoCali.Text = "Auto calibration";
-            this.button_AutoCali.UseVisualStyleBackColor = true;
-            this.button_AutoCali.Click += new System.EventHandler(this.button_AutoCali_Click);
             // 
             // label15
             // 
@@ -485,6 +540,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.button_SavePointCloud);
             this.tabPage4.Controls.Add(this.label12);
             this.tabPage4.Controls.Add(this.textBox_Savepath);
             this.tabPage4.Controls.Add(this.textBox_Index);
@@ -535,6 +591,7 @@
             this.textBox_IP.TabIndex = 13;
             this.textBox_IP.Text = "192.168.1.10";
             this.textBox_IP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.toolTip.SetToolTip(this.textBox_IP, "IP for visionary");
             // 
             // button_Connect
             // 
@@ -543,6 +600,7 @@
             this.button_Connect.Size = new System.Drawing.Size(75, 23);
             this.button_Connect.TabIndex = 14;
             this.button_Connect.Text = "Connect";
+            this.toolTip.SetToolTip(this.button_Connect, "Connect to Visionary and set up Backend server");
             this.button_Connect.UseVisualStyleBackColor = true;
             this.button_Connect.Click += new System.EventHandler(this.button_Connect_Click);
             // 
@@ -554,6 +612,7 @@
             this.label3.Size = new System.Drawing.Size(18, 12);
             this.label3.TabIndex = 15;
             this.label3.Text = "IP:";
+            this.toolTip.SetToolTip(this.label3, "IP for visionary");
             // 
             // trackBar_ROIy
             // 
@@ -566,6 +625,7 @@
             this.trackBar_ROIy.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.trackBar_ROIy.Size = new System.Drawing.Size(45, 526);
             this.trackBar_ROIy.TabIndex = 43;
+            this.toolTip.SetToolTip(this.trackBar_ROIy, "ROI Y axis");
             this.trackBar_ROIy.Value = 512;
             this.trackBar_ROIy.Scroll += new System.EventHandler(this.trackBar_ROIy_Scroll);
             // 
@@ -590,7 +650,30 @@
             this.trackBar_ROIx.Name = "trackBar_ROIx";
             this.trackBar_ROIx.Size = new System.Drawing.Size(650, 45);
             this.trackBar_ROIx.TabIndex = 45;
+            this.toolTip.SetToolTip(this.trackBar_ROIx, "ROI X axis");
             this.trackBar_ROIx.Scroll += new System.EventHandler(this.trackBar_ROIx_Scroll);
+            // 
+            // button_Help
+            // 
+            this.button_Help.Location = new System.Drawing.Point(908, 783);
+            this.button_Help.Name = "button_Help";
+            this.button_Help.Size = new System.Drawing.Size(49, 23);
+            this.button_Help.TabIndex = 46;
+            this.button_Help.Text = "Help!";
+            this.toolTip.SetToolTip(this.button_Help, "Help!");
+            this.button_Help.UseVisualStyleBackColor = true;
+            this.button_Help.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button_SavePointCloud
+            // 
+            this.button_SavePointCloud.Location = new System.Drawing.Point(286, 77);
+            this.button_SavePointCloud.Name = "button_SavePointCloud";
+            this.button_SavePointCloud.Size = new System.Drawing.Size(94, 23);
+            this.button_SavePointCloud.TabIndex = 47;
+            this.button_SavePointCloud.Text = "Save Point Cloud";
+            this.toolTip.SetToolTip(this.button_SavePointCloud, "Save pointcloud to path");
+            this.button_SavePointCloud.UseVisualStyleBackColor = true;
+            this.button_SavePointCloud.Click += new System.EventHandler(this.button_SavePointCloud_Click);
             // 
             // Form1
             // 
@@ -598,6 +681,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(1394, 946);
+            this.Controls.Add(this.button_Help);
             this.Controls.Add(this.trackBar_ROIx);
             this.Controls.Add(this.trackBar_ROIScale);
             this.Controls.Add(this.trackBar_ROIy);
@@ -624,6 +708,8 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_ROIy)).EndInit();
@@ -684,6 +770,12 @@
         private System.Windows.Forms.Button button_SaveResult;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBox_Rounding;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox textBox_OffsetSafety;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button button_Help;
+        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Button button_SavePointCloud;
     }
 }
 

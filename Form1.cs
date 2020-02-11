@@ -60,6 +60,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //find current .exe path
             textBox_Savepath.Text = AppDomain.CurrentDomain.BaseDirectory;
         }
         
@@ -153,47 +154,54 @@ namespace WindowsFormsApp1
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show("ERROR:"+ ex.ToString());
                 throw;
             }
             System.Threading.Thread.Sleep(1500);
 
-            //start image processing thread
+            //-------------------------------------------------------------------------------------------------------
+            // Receiving & Image Processing thread
+            //-------------------------------------------------------------------------------------------------------
             Task.Run(async () =>
             {
                 while (true)
                 {
-
+                    //-------------------------------------------------------------------------------------------------------
+                    // Read Data from Visionary Datastream
+                    //-------------------------------------------------------------------------------------------------------
                     VisionaryFrame frame = await dataStream.GetNextFrameAsync();
 
                     //System.Threading.Thread.Sleep(1000);
                     VisionarySDepthMapData depthMap = frame.GetData<VisionarySDepthMapData>();
 
-                    //// Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
+                    // Important: When converting multiple frames, make sure to re-use the same converter as it will result in much better performance.
                     PointCloudConverter converter = new PointCloudConverter();
                     Vector3[] pointCloud = converter.Convert(depthMap);
                     CenterH = pointCloud[250 * 640 + 320].Z;
-                    // this.label1.Text = z.ToString();
-
                     //read and set range of textboxs
                     setTextboxRange();
 
+                    //Assign converted image
                     bitmap = depthMap.ZMap.ToBitmap(Zmap_DR, Zmap_Offset);
-
-                    this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
                     bitmap_RGB = depthMap.RgbaMap.ToBitmap();
                     bitmap_arry = depthMap.RgbaMap.Data.ToArray();
                     ZMap_arry = depthMap.ZMap.Data.ToArray();
 
+                    this.label1.Text = bitmap.GetPixel(320, 250).R.ToString();
+                    //-------------------------------------------------------------------------------------------------------
+                    // Optional default image proccessing method (locate box)
+                    //-------------------------------------------------------------------------------------------------------
                     if (checkBox_MinAreaRect.Checked == true)
                     {
                         Bitmap TempMap = bitmap;
                         if(RGBAsZmap==true){TempMap = bitmap_RGB;}
 
+                        //init different images for different detection stages
                         Image<Bgr, byte> a = new Image<Bgr, byte>(TempMap);
                         Image<Gray, byte> b = new Image<Gray, byte>(a.Width, a.Height);         //edge detection
                         Image<Gray, byte> c = new Image<Gray, byte>(a.Width, a.Height);         //find contour
                         
+                        //set threshold
                         int Blue_threshold = 50; //0-255
                         int Green_threshold = 50; //0-255
                         int Red_threshold = 50; //0-255
@@ -203,18 +211,18 @@ namespace WindowsFormsApp1
                             a = a.ThresholdBinary(new Bgr(Blue_threshold, Green_threshold, Red_threshold), new Bgr(255, 255, 255));
                         }
                         
-                        //set ROI
+                        //Set ROI
                         a.ROI =new Rectangle(ROIx ,ROIy ,(int)(640*ROIScale) , (int)(512*ROIScale));
 
-                        //find edges
+                        //Find edges
                         int cannytherhold = 100;
                         CvInvoke.Canny(a, b, cannytherhold/2, cannytherhold,3,false);
 
-                        //enhance canny edges
+                        //Enhance canny edges
                         Mat struct_element = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
                         CvInvoke.Dilate(b, b, struct_element, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(255, 255, 255));
 
-                        //find contours
+                        //Find contours
                         VectorOfVectorOfPoint con = new VectorOfVectorOfPoint(); 
                         CvInvoke.FindContours(b, con, c, RetrType.List, ChainApproxMethod.ChainApproxNone);
 
@@ -224,7 +232,7 @@ namespace WindowsFormsApp1
                         listBox_BoxList.Items.Clear();
                         for (int i = 0; i < con.Size; i++)
                         {
-                            //filter params
+                            //Filter params
                             double tempArea = CvInvoke.ContourArea(con[i], true);
                             double tempArc = CvInvoke.ArcLength(con[i],true);
                             double tempScale = tempArea / Math.Pow(tempArc / 4, 2);
@@ -233,8 +241,19 @@ namespace WindowsFormsApp1
                             {
                                 RotatedRect rrec = CvInvoke.MinAreaRect(con2[i]);       //g
 
+                                //-------------------------------------------------------------------------------------------------------
+                                // find box dimensions
+                                //-------------------------------------------------------------------------------------------------------
+
                                 //find box height
-                                int boxHeight = (int)Math.Round(((double)BackgroundH- (double)pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].Z)*(double)1000);
+                                int boxHeight = -10000;
+                                int tempX = 0;
+                                int tempY = 0;
+                                while (boxHeight<0)
+                                {   
+                                    boxHeight = (int)Math.Round(((double)BackgroundH - (double)pointCloud[(ROIy+tempY + (int)rrec.Center.Y) * 640 + (ROIx +tempX+ (int)rrec.Center.X)].Z) * (double)1000);
+                                    tempX++;
+                                }
 
                                 //apply sensor prespective angle correction
                                 if (AngleCorr == true)
@@ -246,20 +265,32 @@ namespace WindowsFormsApp1
                                 }
                                 
                                 //find dimension of 1 pixel
-                                double PixelScale = (double)(pointCloud[(int)(ROIy+rrec.Center.Y) * 640 + (int)(ROIx+rrec.Center.X)-15].X- (double)pointCloud[(int)(ROIy+rrec.Center.Y )* 640 + (int)(ROIx+rrec.Center.X)+15].X)*1000.0/30.0;
-
-                                int boxWidth =(int) (rrec.Size.Width*PixelScale);
+                                double PixelScaleX = (double)(pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) - 15].X - (double)pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) + 15].X) * 1000.0 / 30.0;
+                                double PixelScaleY = (double)(pointCloud[(int)(ROIy + rrec.Center.Y - 15) * 640 + (int)(ROIx + rrec.Center.X)].X - (double)pointCloud[(int)(ROIy + rrec.Center.Y + 15) * 640 + (int)(ROIx + rrec.Center.X)].X) * 1000.0 / 30.0;
+                                double PixelScale = 0;
+                                if (PixelScaleY<0)
+                                {
+                                    PixelScale = PixelScaleX;
+                                }
+                                else if (PixelScaleX<0)
+                                {
+                                    PixelScale = PixelScaleY;
+                                }
+                                else
+                                {
+                                    PixelScale = (PixelScaleX + PixelScaleY) / 2;
+                                } 
+                                int boxWidth =(int) (rrec.Size.Width * PixelScale);
                                 int boxLength = (int)(rrec.Size.Height* PixelScale);
 
-
-                                //rounding
+                                //Rounding result
                                 boxLength = (int)(Math.Round((double)boxLength / Rounding, MidpointRounding.AwayFromZero) * Rounding);
                                 boxWidth = (int)(Math.Round((double)boxWidth / Rounding, MidpointRounding.AwayFromZero) * Rounding);
                                 boxHeight = (int)(Math.Round((double)boxHeight / Rounding, MidpointRounding.AwayFromZero) * Rounding);
 
                                 double boxArea = ((double)boxLength/10) * ((double)boxWidth/10) * ((double)boxHeight/10) ;//cm
 
-                                // add to listbox
+                                //add box to listbox
                                 listBox_BoxList.Items.Add("Box (Length: " + boxLength+ "mm, Width: " + boxWidth + "mm, Height: " + boxHeight +"mm, Vol:" + boxArea + "cm^3)");
 
                                 PointF[] pointfs = rrec.GetVertices();
@@ -280,14 +311,16 @@ namespace WindowsFormsApp1
                             SaveFile.Close();
                             SaveQueue = false;
                         }
+                        if (SaveQueue==true)
+                        {
+
+                        }
                         /*
                         for (int i = 0; i < con.Size; i++)
                         {
                             CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 255, 0, 255), 2);
                         }
                         */
-                        //162 217
-                        //170 210
 
                         this.pictureBox2.Image = a.ToBitmap();
                         this.pictureBox1.Image = bitmap_RGB;
@@ -361,7 +394,7 @@ namespace WindowsFormsApp1
             // pixel = (byte)(((Zmap[i2]+Zmap_Offset) / (double)scalingMaxValue) * byte.MaxValue)
             // (( pixel / byte.MaxValue ) *(double)Zmap_DR)-Zmap_arry[250 * 640 + 320]
 
-            textBox_ZmapOffset.Text = ((ushort)(((double)259 / (double)byte.MaxValue) * (double)Zmap_DR - ZMap_arry[250 * 640 + 320])).ToString();
+            textBox_ZmapOffset.Text = ((ushort)(((double)(255+Convert.ToInt32(textBox_OffsetSafety.Text))  / (double)byte.MaxValue) * (double)Zmap_DR - ZMap_arry[250 * 640 + 320])).ToString();
         }
         private void button_Save_Click(object sender, EventArgs e)
         {
@@ -400,6 +433,10 @@ namespace WindowsFormsApp1
             index++;
             textBox_Index.Text = index.ToString();
         }
+        private void button_SavePointCloud_Click(object sender, EventArgs e)
+        {
+            CreateDirectory();
+        }
         private void button_SaveResult_Click(object sender, EventArgs e)
         {
             CreateDirectory();
@@ -408,6 +445,70 @@ namespace WindowsFormsApp1
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             RatioFilter = (double)trackBar_RatioFilter.Value / 20;
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Welcome to the help page that will probably cause more confusion...\n\n" +
+                "This Application can be used to detect ANY objects with backend ROI enabled\n" +
+                "has built-in box detection Algorithm\n\n" +
+                "General Input & Params:\n" +
+                "   1. Connect(Button)\n" +
+                "       - Connects to Visionary with IP next to it\n" +
+                "       - set up Backend server for external detection methods using Port\n" +
+                "         in Tab/Backend Detection\n" +
+                "   2. IP (Textbox)\n" +
+                "       - Expects IP input used for Visionary, Ex: \"192.168.1.10\"\n" +
+                "   3. Help! (Button)\n" +
+                "       - Leads to here\n\n" +
+                "Tab Navigation:\n" +
+                "   1. Box Detection Algorithm\n" +
+                "       1.1 Locate Box (Checkbox):\n" +
+                "           - Checking this will enable box detection\n" +
+                "             and other detection settings\n" +
+                "       1.2 Use RGB as Zmap (Checkbox)\n" +
+                "           - Will replace Box Detection input with RGB image\n" +
+                "           - Requires clear color difference for accurate detection\n" +
+                "       1.3 Prespective angle correction (Checkbox)\n" +
+                "           - Corrects the height Z due to box X/Y axis offset\n" +
+                "           - Enable this unless it causes problem\n" +
+                "       1.4 Min Pixel Area Filter (Textbox)\n" +
+                "           - Filters away false detection via minimum area\n" +
+                "           - Unit in Pixels area,Ex: filter 2000, 50px*20px will be filtered\n" +
+                "       1.5 Detection Step Size (Textbox)\n" +
+                "           - Detection Result W/L/H will round to this number\n" +
+                "       1.6 Ratio Filter (Slidebar)\n" +
+                "           - Filters awat false detection via object ratio\n" +
+                "           - set to 0 will disable filter\n" +
+                "           - set to 1 will require a perfect rectangle\n" +
+                "       1.7 Save Result (Button)\n" +
+                "           - Saves detected box list to path in \"save image\"Tab\n" +
+                "   2. Backend Detection\n" +
+                "       2.1 Use Backend ROI (Checkbox)\n" +
+                "           - Enables backend input, will send a frame over upon\n" +
+                "             receiving \"REQUEST\\n\"\n" +
+                "           - Expects a reply from backend(x,y,w,h) \n" +
+                "             for each bounding box in ASCII\n" +
+                "       2.2 Port (Textbox)\n" +
+                "           - Port for backend detection\n" +
+                "           - Set this BEFORE connecting\n" + 
+                "   3. Settings\n" +
+                "       3.1 Zmap Dynamic Range (Textbox)\n" +
+                "           - range of byte, when convered from int16\n" +
+                "           - Eq: byte=((Zmap + Offset) / DynamicRange) * 255\n" +
+                "           - lower: smaller range(more sensitive to change)\n" +
+                "                    more prone to overflow\n" +
+                "           - larger: larger range(less sensitive to change)\n" +
+                "                    less prone to overflow\n" +
+                "       3.2 Zmap Offset (Textbox)\n" +
+                "           - Eq: byte=((Zmap + Offset) / DynamicRange) * 255\n" + 
+                "       3.3 Background Height (Textbox)\n" +
+                "           - background height of object\n" +
+                "       3.4 Auto calibration (Button) \n" +
+                "           - automatically set tab 3.2, tab 3.3\n" +
+                "           - reference taken from center point\n" +
+                "       3.5 Offset Safety (Textbox)\n" +
+                "           - margin of whats considered as background\n" +
+                "   4. Save Image\n");
         }
 
         private void checkBox_MinAreaRect_CheckedChanged(object sender, EventArgs e)
@@ -418,6 +519,7 @@ namespace WindowsFormsApp1
                 checkBox_RGBAsZmap.Enabled = true;
                 checkBox_AngleCorr.Enabled = true;
                 textBox_MinPixelArea.Enabled = true;
+                textBox_Rounding.Enabled = true;
 
                 //ROI
                 trackBar_ROIx.Enabled = true;
@@ -430,6 +532,7 @@ namespace WindowsFormsApp1
                 checkBox_RGBAsZmap.Enabled = false;
                 checkBox_AngleCorr.Enabled = false;
                 textBox_MinPixelArea.Enabled = false;
+                textBox_Rounding.Enabled = false;
 
                 //ROI
                 trackBar_ROIx.Enabled = false;
