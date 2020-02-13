@@ -30,16 +30,7 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        int index = 0;
-        Bitmap bitmap;
-        Bitmap bitmap_RGB;
-        Bitmap bitmap_Mixed;
-        byte[] bitmap_arry;
-        ushort[] ZMap_arry;
-        float CenterH;
-        bool SaveQueue = false;
-
-        //var settings
+        //global var settings
         bool AngleCorr = true;
         bool RGBAsZmap = false;
         int MinPixelArea = 2000;
@@ -51,7 +42,20 @@ namespace WindowsFormsApp1
         int ROIx=0;
         int ROIy=0;
         double ROIScale=1;
-       
+
+        //misc
+        int index = 0;      //file index
+        Bitmap bitmap;      //Zmap bitmap
+        Bitmap bitmap_RGB;  //RGB bitmap
+        Bitmap bitmap_Mixed;//mixed bitmap
+        byte[] bitmap_arry; 
+        ushort[] ZMap_arry;
+        float CenterH;
+
+        //internal flags
+        bool SaveQueueList = false;
+        bool SaveQueuePly = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -134,7 +138,6 @@ namespace WindowsFormsApp1
                     MessageBox.Show("SocketException: " + e1.Message);
                 }
             });
-
 
             try
             {
@@ -299,7 +302,8 @@ namespace WindowsFormsApp1
                             }
                         }
 
-                        if (SaveQueue==true)
+                        //save box list
+                        if (SaveQueueList==true)
                         {
                             System.IO.StreamWriter SaveFile = new System.IO.StreamWriter(textBox_Savepath.Text + "/Output/Detection Result/" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".txt");
 
@@ -309,13 +313,16 @@ namespace WindowsFormsApp1
                             }
 
                             SaveFile.Close();
-                            SaveQueue = false;
+                            SaveQueueList = false;
                         }
-                        if (SaveQueue==true)
-                        {
 
+                        //save pointcloud
+                        if (SaveQueuePly == true)
+                        {
+                            await PointCloudPlyWriter.WriteFormatPLYAsync(textBox_Savepath.Text + "/Output/PointCloud/"+index.ToString()+".ply", pointCloud, depthMap.RgbaMap, true);
                         }
-                        /*
+                        /* 
+                        //for displaying contours
                         for (int i = 0; i < con.Size; i++)
                         {
                             CvInvoke.DrawContours(d, con, i, new MCvScalar(255, 255, 0, 255), 2);
@@ -339,6 +346,11 @@ namespace WindowsFormsApp1
                 }
             });
         }
+
+        //-------------------------------------------------------------------------------------------------------
+        // User Inputs
+        //-------------------------------------------------------------------------------------------------------
+
         private void textBox_Rounding_TextChanged(object sender, EventArgs e)
         {
             if(textBox_Rounding.Text=="")
@@ -368,7 +380,7 @@ namespace WindowsFormsApp1
 
         private void trackBar_ROIScale_Scroll(object sender, EventArgs e)
         {
-            ROIScale = (double)trackBar_ROIScale.Value/10.0;
+            ROIScale = (double)trackBar_ROIScale.Value/100.0;
         }
 
         private void checkBox_AngleCorr_CheckedChanged(object sender, EventArgs e)
@@ -436,11 +448,12 @@ namespace WindowsFormsApp1
         private void button_SavePointCloud_Click(object sender, EventArgs e)
         {
             CreateDirectory();
+            SaveQueuePly = true;
         }
         private void button_SaveResult_Click(object sender, EventArgs e)
         {
             CreateDirectory();
-            SaveQueue = true;
+            SaveQueueList = true;
         }
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -477,7 +490,7 @@ namespace WindowsFormsApp1
                 "       1.5 Detection Step Size (Textbox)\n" +
                 "           - Detection Result W/L/H will round to this number\n" +
                 "       1.6 Ratio Filter (Slidebar)\n" +
-                "           - Filters awat false detection via object ratio\n" +
+                "           - Filters away false detection via object ratio\n" +
                 "           - set to 0 will disable filter\n" +
                 "           - set to 1 will require a perfect rectangle\n" +
                 "       1.7 Save Result (Button)\n" +
@@ -541,7 +554,10 @@ namespace WindowsFormsApp1
             }
         }
 
-
+        //-------------------------------------------------------------------------------------------------------
+        // Functions
+        //-------------------------------------------------------------------------------------------------------
+        
         //unused (for now)
         private byte[] ImageToByte(Bitmap img)
         {
@@ -564,6 +580,10 @@ namespace WindowsFormsApp1
             return Stream;
         }
 
+
+        /// <summary>
+        /// Mixes RGB bitmap with Zmap
+        /// </summary>
         private Bitmap mixedMap(byte[] RGB_arry, ushort[] Zmap,UInt16 scalingMaxValue)
         {
             Byte[] temp_arry = new byte[640 * 512 * 4];//RGB_arry;
@@ -581,6 +601,9 @@ namespace WindowsFormsApp1
             return resultMap;
         }
 
+        /// <summary>
+        /// converts array to 32bppArgb bitmap
+        /// </summary>
         public Bitmap CopyDataToBitmap(byte[] data)
         {
             //Here create the Bitmap to the know height, width and format
@@ -600,6 +623,10 @@ namespace WindowsFormsApp1
             //Return the bitmap 
             return bmp;
         }
+
+        /// <summary>
+        /// parses data coming from backend
+        /// </summary>
         void parsedata(String data)
         {
             String[] _commandArry = data.Split(' ');
@@ -635,6 +662,10 @@ namespace WindowsFormsApp1
         {
             return Rad * 180 / Math.PI;
         }
+
+        /// <summary>
+        /// checks and sets the range of textboxes to prevent crashes
+        /// </summary>
         void setTextboxRange()
         {
             //zmap dynamic range
@@ -693,14 +724,17 @@ namespace WindowsFormsApp1
                 MinPixelArea = Convert.ToUInt16(textBox_MinPixelArea.Text);
             }              
         }
+
+        /// <summary>
+        /// init save directories
+        /// </summary>
         void CreateDirectory ()
         {
-            System.IO.Directory.CreateDirectory(textBox_Savepath.Text+"/Output/rgb");
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/rgb");
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/dep");
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/mixed");
             System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/Detection Result");
+            System.IO.Directory.CreateDirectory(textBox_Savepath.Text + "/Output/PointCloud");
         }
-
-
     }
 }

@@ -71,6 +71,7 @@
             this.label15 = new System.Windows.Forms.Label();
             this.textBox_BackgroundH = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button_SavePointCloud = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.textBox_Savepath = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -82,7 +83,6 @@
             this.trackBar_ROIx = new System.Windows.Forms.TrackBar();
             this.button_Help = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.button_SavePointCloud = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Mixed)).BeginInit();
@@ -557,20 +557,31 @@
             this.tabPage4.Text = "Save Image";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // button_SavePointCloud
+            // 
+            this.button_SavePointCloud.Location = new System.Drawing.Point(325, 47);
+            this.button_SavePointCloud.Name = "button_SavePointCloud";
+            this.button_SavePointCloud.Size = new System.Drawing.Size(94, 23);
+            this.button_SavePointCloud.TabIndex = 47;
+            this.button_SavePointCloud.Text = "Save Point Cloud";
+            this.toolTip.SetToolTip(this.button_SavePointCloud, "Save pointcloud to path");
+            this.button_SavePointCloud.UseVisualStyleBackColor = true;
+            this.button_SavePointCloud.Click += new System.EventHandler(this.button_SavePointCloud_Click);
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(386, 52);
+            this.label12.Location = new System.Drawing.Point(177, 79);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(25, 12);
+            this.label12.Size = new System.Drawing.Size(28, 12);
             this.label12.TabIndex = 46;
-            this.label12.Text = "Path";
+            this.label12.Text = "Path:";
             // 
             // textBox_Savepath
             // 
-            this.textBox_Savepath.Location = new System.Drawing.Point(189, 49);
+            this.textBox_Savepath.Location = new System.Drawing.Point(208, 76);
             this.textBox_Savepath.Name = "textBox_Savepath";
-            this.textBox_Savepath.Size = new System.Drawing.Size(191, 22);
+            this.textBox_Savepath.Size = new System.Drawing.Size(211, 22);
             this.textBox_Savepath.TabIndex = 13;
             this.textBox_Savepath.Text = "C:\\";
             // 
@@ -632,13 +643,13 @@
             // trackBar_ROIScale
             // 
             this.trackBar_ROIScale.Enabled = false;
-            this.trackBar_ROIScale.LargeChange = 3;
             this.trackBar_ROIScale.Location = new System.Drawing.Point(1220, 27);
+            this.trackBar_ROIScale.Maximum = 100;
             this.trackBar_ROIScale.Minimum = 1;
             this.trackBar_ROIScale.Name = "trackBar_ROIScale";
             this.trackBar_ROIScale.Size = new System.Drawing.Size(157, 45);
             this.trackBar_ROIScale.TabIndex = 44;
-            this.trackBar_ROIScale.Value = 10;
+            this.trackBar_ROIScale.Value = 100;
             this.trackBar_ROIScale.Scroll += new System.EventHandler(this.trackBar_ROIScale_Scroll);
             // 
             // trackBar_ROIx
@@ -663,17 +674,6 @@
             this.toolTip.SetToolTip(this.button_Help, "Help!");
             this.button_Help.UseVisualStyleBackColor = true;
             this.button_Help.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button_SavePointCloud
-            // 
-            this.button_SavePointCloud.Location = new System.Drawing.Point(286, 77);
-            this.button_SavePointCloud.Name = "button_SavePointCloud";
-            this.button_SavePointCloud.Size = new System.Drawing.Size(94, 23);
-            this.button_SavePointCloud.TabIndex = 47;
-            this.button_SavePointCloud.Text = "Save Point Cloud";
-            this.toolTip.SetToolTip(this.button_SavePointCloud, "Save pointcloud to path");
-            this.button_SavePointCloud.UseVisualStyleBackColor = true;
-            this.button_SavePointCloud.Click += new System.EventHandler(this.button_SavePointCloud_Click);
             // 
             // Form1
             // 
