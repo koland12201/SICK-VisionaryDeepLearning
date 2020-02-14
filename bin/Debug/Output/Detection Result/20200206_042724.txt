@@ -1,4 +1,0 @@
-Box (Length: 167mm, Width: 218mm, Height: 35mm, Vol:1274.21cm^3)
-Box (Length: 410mm, Width: 265mm, Height: 60mm, Vol:6519cm^3)
-Box (Length: 147mm, Width: 87mm, Height: 53mm, Vol:677.817cm^3)
-Box (Length: 228mm, Width: 285mm, Height: 192mm, Vol:12476.16cm^3)

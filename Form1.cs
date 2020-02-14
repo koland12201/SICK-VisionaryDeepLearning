@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+//using System.Collections.Generic;
+//using System.ComponentModel;
+//using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+//using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Visionary.NET;
 using Visionary.NET.Shared;
 using Visionary.NET.Shared.Models;
-using Visionary.NET.Shared.Lib;
-using Visionary.NET.Shared.Models.SickRecord;
+//using Visionary.NET.Shared.Lib;
+//using Visionary.NET.Shared.Models.SickRecord;
 using Visionary.NET.Shared.PointCloud;
 using System.Numerics;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
-using System.IO;
+//using System.IO;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Emgu.CV;
-using Emgu.CV.UI;
+//using Emgu.CV.UI;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
@@ -124,6 +124,7 @@ namespace WindowsFormsApp1
                             {
                                 try
                                 {
+                                    //try parsing x/y/w/h if its not empty
                                     parsedata(data);
                                 }
                                 catch
@@ -250,39 +251,37 @@ namespace WindowsFormsApp1
 
                                 //find box height
                                 int boxHeight = -10000;
-                                int tempX = 0;
-                                int tempY = 0;
-                                while (boxHeight<0)
+                                int tempX = 0; //X axis offset if point is NULL
+                                int tempY = 0; //Y axis offset if point is NULL
+                                while (boxHeight<0&&tempX<=50)
                                 {   
                                     boxHeight = (int)Math.Round(((double)BackgroundH - (double)pointCloud[(ROIy+tempY + (int)rrec.Center.Y) * 640 + (ROIx +tempX+ (int)rrec.Center.X)].Z) * (double)1000);
                                     tempX++;
                                 }
+                                tempX--;//for angle correction
 
                                 //apply sensor prespective angle correction
                                 if (AngleCorr == true)
                                 {
-                                    double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].X, 2) + Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+(int)rrec.Center.X)].Y, 2));
+                                    double boxCenterOffset = Math.Sqrt(Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+ tempX + (int)rrec.Center.X)].X, 2) + Math.Pow(pointCloud[(ROIy+(int)rrec.Center.Y) * 640 + (ROIx+ tempX + (int)rrec.Center.X)].Y, 2));
                                     double boxCenterAngle = Math.Atan(boxCenterOffset*1.1 / BackgroundH);
                                     double heightMulti = 1 / Math.Cos(boxCenterAngle);
                                     boxHeight = (int)((double)boxHeight * heightMulti);
                                 }
-                                
-                                //find dimension of 1 pixel
-                                double PixelScaleX = (double)(pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) - 15].X - (double)pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) + 15].X) * 1000.0 / 30.0;
-                                double PixelScaleY = (double)(pointCloud[(int)(ROIy + rrec.Center.Y - 15) * 640 + (int)(ROIx + rrec.Center.X)].X - (double)pointCloud[(int)(ROIy + rrec.Center.Y + 15) * 640 + (int)(ROIx + rrec.Center.X)].X) * 1000.0 / 30.0;
-                                double PixelScale = 0;
-                                if (PixelScaleY<0)
-                                {
-                                    PixelScale = PixelScaleX;
-                                }
-                                else if (PixelScaleX<0)
-                                {
-                                    PixelScale = PixelScaleY;
-                                }
-                                else
-                                {
-                                    PixelScale = (PixelScaleX + PixelScaleY) / 2;
-                                } 
+
+                                //find dimension of 1 pixel from avg of X/Y axis box plane
+                                tempX = 0;//unused here
+                                tempY = 0;//unused here
+                                double PixelScaleX = -10000;
+                                double PixelScaleY = -10000;
+                                double PixelScale = -10000;
+
+                                PixelScaleX = (double)(pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) - (15+ tempX)].X - (double)pointCloud[(int)(ROIy + rrec.Center.Y) * 640 + (int)(ROIx + rrec.Center.X) + (15+ tempX)].X) * 1000.0 / (30.0+ (tempX +tempX));
+
+                                PixelScaleY = (double)(pointCloud[(int)(ROIy + rrec.Center.Y - (15 + tempY)) * 640 + (int)(ROIx + rrec.Center.X)].Y - (double)pointCloud[(int)(ROIy + rrec.Center.Y + (15 + tempY)) * 640 + (int)(ROIx + rrec.Center.X)].Y) * 1000.0 / (30.0 + (tempY + tempY));
+
+                                PixelScale = (PixelScaleX + PixelScaleY) / 2;
+
                                 int boxWidth =(int) (rrec.Size.Width * PixelScale);
                                 int boxLength = (int)(rrec.Size.Height* PixelScale);
 
@@ -364,23 +363,38 @@ namespace WindowsFormsApp1
         }
         private void trackBar_ROIx_Scroll(object sender, EventArgs e)
         {
-            if (trackBar_ROIx.Value + ((double)trackBar_ROIScale.Value/10) * 640.0 < 640)
+            if (trackBar_ROIx.Value + ((double)trackBar_ROIScale.Value/100) * 640.0 < 640)
             {
                 ROIx = trackBar_ROIx.Value;
+            }
+            else
+            {
+                trackBar_ROIx.Value = ROIx;
             }
         }
 
         private void trackBar_ROIy_Scroll(object sender, EventArgs e)
         {
-            if ((512-trackBar_ROIy.Value )+ ((double)trackBar_ROIScale.Value / 10) * 512.0 < 512)
+            if ((512-trackBar_ROIy.Value )+ ((double)trackBar_ROIScale.Value / 100) * 512.0 < 512)
             {
                 ROIy = 512 - trackBar_ROIy.Value;
+            }
+            else
+            {
+                trackBar_ROIy.Value = 512-ROIy;
             }
         }
 
         private void trackBar_ROIScale_Scroll(object sender, EventArgs e)
         {
-            ROIScale = (double)trackBar_ROIScale.Value/100.0;
+            if((512 - trackBar_ROIy.Value) + ((double)trackBar_ROIScale.Value / 100) * 512.0 < 512&& trackBar_ROIx.Value + ((double)trackBar_ROIScale.Value / 100) * 640.0 < 640)
+            {
+                ROIScale = (double)trackBar_ROIScale.Value / 100.0;
+            }
+            else
+            {
+                trackBar_ROIScale.Value= (int)(ROIScale * (double)100);
+            }
         }
 
         private void checkBox_AngleCorr_CheckedChanged(object sender, EventArgs e)
@@ -462,9 +476,9 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Welcome to the help page that will probably cause more confusion...\n\n" +
-                "This Application can be used to detect ANY objects with backend ROI enabled\n" +
-                "has built-in box detection Algorithm\n\n" +
-                "General Input & Params:\n" +
+                "This Application can be used to detect ANY objects with backend detection enabled\n" +
+                "has built-in box detection Algorithm");
+            MessageBox.Show("General Input & Params:\n" +
                 "   1. Connect(Button)\n" +
                 "       - Connects to Visionary with IP next to it\n" +
                 "       - set up Backend server for external detection methods using Port\n" +
@@ -472,8 +486,8 @@ namespace WindowsFormsApp1
                 "   2. IP (Textbox)\n" +
                 "       - Expects IP input used for Visionary, Ex: \"192.168.1.10\"\n" +
                 "   3. Help! (Button)\n" +
-                "       - Leads to here\n\n" +
-                "Tab Navigation:\n" +
+                "       - Leads to here\n\n");
+            MessageBox.Show("Tab Navigation:\n" +
                 "   1. Box Detection Algorithm\n" +
                 "       1.1 Locate Box (Checkbox):\n" +
                 "           - Checking this will enable box detection\n" +
@@ -496,7 +510,7 @@ namespace WindowsFormsApp1
                 "       1.7 Save Result (Button)\n" +
                 "           - Saves detected box list to path in \"save image\"Tab\n" +
                 "   2. Backend Detection\n" +
-                "       2.1 Use Backend ROI (Checkbox)\n" +
+                "       2.1 Use Backend Detection (Checkbox)\n" +
                 "           - Enables backend input, will send a frame over upon\n" +
                 "             receiving \"REQUEST\\n\"\n" +
                 "           - Expects a reply from backend(x,y,w,h) \n" +

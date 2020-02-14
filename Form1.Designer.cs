@@ -217,7 +217,7 @@
             this.listBox_BoxList.ItemHeight = 32;
             this.listBox_BoxList.Location = new System.Drawing.Point(524, 581);
             this.listBox_BoxList.Name = "listBox_BoxList";
-            this.listBox_BoxList.Size = new System.Drawing.Size(858, 196);
+            this.listBox_BoxList.Size = new System.Drawing.Size(881, 196);
             this.listBox_BoxList.TabIndex = 17;
             // 
             // checkBox_UseBackend
@@ -225,10 +225,10 @@
             this.checkBox_UseBackend.AutoSize = true;
             this.checkBox_UseBackend.Location = new System.Drawing.Point(15, 9);
             this.checkBox_UseBackend.Name = "checkBox_UseBackend";
-            this.checkBox_UseBackend.Size = new System.Drawing.Size(108, 16);
+            this.checkBox_UseBackend.Size = new System.Drawing.Size(132, 16);
             this.checkBox_UseBackend.TabIndex = 18;
-            this.checkBox_UseBackend.Text = "Use Backend ROI";
-            this.toolTip.SetToolTip(this.checkBox_UseBackend, "Enables backend input");
+            this.checkBox_UseBackend.Text = "Use Backend Detection";
+            this.toolTip.SetToolTip(this.checkBox_UseBackend, "Enables backend input/output");
             this.checkBox_UseBackend.UseVisualStyleBackColor = true;
             // 
             // textBox_DynamicRange
@@ -588,7 +588,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(1263, 12);
+            this.label10.Location = new System.Drawing.Point(1287, 12);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(47, 12);
             this.label10.TabIndex = 35;
@@ -596,7 +596,7 @@
             // 
             // textBox_IP
             // 
-            this.textBox_IP.Location = new System.Drawing.Point(1192, 912);
+            this.textBox_IP.Location = new System.Drawing.Point(1220, 912);
             this.textBox_IP.Name = "textBox_IP";
             this.textBox_IP.Size = new System.Drawing.Size(98, 22);
             this.textBox_IP.TabIndex = 13;
@@ -606,7 +606,7 @@
             // 
             // button_Connect
             // 
-            this.button_Connect.Location = new System.Drawing.Point(1302, 911);
+            this.button_Connect.Location = new System.Drawing.Point(1330, 911);
             this.button_Connect.Name = "button_Connect";
             this.button_Connect.Size = new System.Drawing.Size(75, 23);
             this.button_Connect.TabIndex = 14;
@@ -618,7 +618,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1168, 915);
+            this.label3.Location = new System.Drawing.Point(1196, 915);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 12);
             this.label3.TabIndex = 15;
@@ -647,7 +647,7 @@
             this.trackBar_ROIScale.Maximum = 100;
             this.trackBar_ROIScale.Minimum = 1;
             this.trackBar_ROIScale.Name = "trackBar_ROIScale";
-            this.trackBar_ROIScale.Size = new System.Drawing.Size(157, 45);
+            this.trackBar_ROIScale.Size = new System.Drawing.Size(185, 45);
             this.trackBar_ROIScale.TabIndex = 44;
             this.trackBar_ROIScale.Value = 100;
             this.trackBar_ROIScale.Scroll += new System.EventHandler(this.trackBar_ROIScale_Scroll);
@@ -680,7 +680,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(1394, 946);
+            this.ClientSize = new System.Drawing.Size(1417, 946);
             this.Controls.Add(this.button_Help);
             this.Controls.Add(this.trackBar_ROIx);
             this.Controls.Add(this.trackBar_ROIScale);

@@ -112,7 +112,6 @@ E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\b
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\OpenTK.GLControl.pdb
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\OpenTK.GLControl.xml
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\System.Numerics.Vectors.xml
-E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\Visionary.NET.Shared.pdb
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\ZedGraph.xml
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\de\ZedGraph.resources.dll
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\es\ZedGraph.resources.dll
@@ -127,7 +126,6 @@ E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\b
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\tr\ZedGraph.resources.dll
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\zh-cn\ZedGraph.resources.dll
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\bin\Debug\zh-tw\ZedGraph.resources.dll
-E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\Visionary S Demo- koland.csprojAssemblyReference.cache
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe.config
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Form1.resources
 E:\Users\Koland Mak\source\repos\Visionary S\WindowsFormsApp1\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
